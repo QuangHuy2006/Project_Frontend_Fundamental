@@ -33,6 +33,10 @@ ul {
   justify-content: flex-end;
 }
 
+.body-header-left{
+  width: 50%; 
+}
+
 .header {
   display: flex;
   background-color: black;
@@ -108,6 +112,27 @@ li {
   padding: 4px 0px;
 }
 
+.first-element{
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+}
+.second-element{
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+}
+.third-element{
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+}
+
+.first-element-right{
+  display: flex;
+  justify-content: space-between !important;
+}
+
 .roleInPerson {
   font-weight: 400;
   font-size: 11.94px;
@@ -152,7 +177,7 @@ li {
 }
 
 .brand {
-  font-weight: 500;
+  font-weight: 600;
   font-size: 23.54px;
   line-height: 28.8px;
   letter-spacing: 0px;
@@ -537,4 +562,27 @@ select {
   align-items: center;
   gap: 15.44px;
   justify-content: flex-end;
+}
+
+.profilePic{
+  border: 1px solid transparent;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  align-self: center;
+  position: relative;
+}
+.profileName{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #FFFFFF;
+}
+.classForLiOnly:nth-child(n+3){
+  display: none;
+}
+.userListForm{
+  display: flex;
 }

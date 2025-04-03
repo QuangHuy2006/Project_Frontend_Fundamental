@@ -1,5 +1,3 @@
-localStorage.removeItem("task");
-let userLocals = JSON.parse(localStorage.getItem("task")) || [];
 let currentPage = 1;
 let totalPerPage = 2;
 const pages = document.querySelector(".buttonPages");
@@ -8,6 +6,11 @@ const previousButton = document.querySelector(".previous");
 const continueButton = document.querySelector(".continue");
 const saveBtn = document.querySelector("#save");
 let deletedId;
+let userLocals = JSON.parse(localStorage.getItem("task")) || [];
+if (userLocals.length) {
+  render(userLocals);
+  renderPages();
+}
 function render(userInput) {
   const user = [];
   const getFirstElementEachPage = (currentPage - 1) * totalPerPage;
@@ -33,20 +36,24 @@ function render(userInput) {
     row.querySelector(".fix").addEventListener("click", function (event) {
       event.preventDefault();
       user[index].name = prompt("Nhập tên dự án mới");
+      localStorage.setItem("task", JSON.stringify(userLocals));
       render(userLocals);
     });
     row.querySelector(".delete").addEventListener("click", function (event) {
       event.preventDefault();
       confirmDeleteWindow.style.display = "block";
       background.style.display = "block";
-      console.log(user[index]);
-      user.splice(index, 1);
       deletedId = index;
     });
     saveBtn.onclick = function () {
-      console.log(user);
-      render(userLocals);
+      const totalPages = Math.ceil(userLocals.length / totalPerPage);
+      const realIndex = (currentPage - 1) * totalPerPage + deletedId;
+      userLocals.splice(realIndex, 1);
       localStorage.setItem("task", JSON.stringify(userLocals));
+      render(userLocals);
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
       confirmDeleteWindow.style.display = "none";
       background.style.display = "none";
     };
@@ -63,6 +70,7 @@ addBtn.addEventListener("click", function (event) {
   background.style.display = "block";
 });
 const projectNameInput = document.querySelector("#projectName");
+const projectNameInput2 = document.querySelector(".projectNameInput");
 const projectDecribe = document.querySelector("#projectDecribe");
 const error1 = document.querySelector("#error");
 const error2 = document.querySelector("#error2");
@@ -90,7 +98,7 @@ function add(event) {
       projectNameInput.style.borderColor = "lightgray";
       check++;
     }
-  }else {
+  } else {
     error1.textContent = "";
     projectNameInput.style.borderColor = "lightgray";
     check++;
@@ -164,6 +172,10 @@ function closer() {
   addWindow.style.display = "none";
   background.style.display = "none";
 }
-// function findByName(){
-//   const findName =
-// }
+function findByName() {
+  const findName = userLocals.filter(
+    (value) => value.name == +projectNameInput2.value.trim()
+  );
+  render(findName);
+  renderPages();
+}

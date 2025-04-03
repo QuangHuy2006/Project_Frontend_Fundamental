@@ -5,7 +5,7 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Project Management</title>
+    <title>Mission</title>
     <link
       rel="stylesheet"
       href="../CSS/CSS_mission.css" />
@@ -25,17 +25,18 @@
         <div class="window-body">
           <span id="text">Email</span>
           <input
-            type="text"
-            id="email" />
-          <span id="error"></span>
+          type="text"
+          id="email" />
+          <span id="errorEmail"></span>
           <span id="text">Vai trò</span>
           <input
-            type="text"
-            id="role" />
+          type="text"
+          id="role" />
+          <span id="errorRole"></span>
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button id="save">Lưu</button>
+          <button id="save" onclick="addUser()">Lưu</button>
         </div>
       </div>
       <div class="add-task-window">
@@ -86,7 +87,7 @@
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button id="save">Lưu</button>
+          <button id="save" onclick="addUser()">Lưu</button>
         </div>
       </div>
         <div class="userList">
@@ -103,7 +104,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <!-- <tr>
                     <th>
                       <img
                     src="../Image/anNguyen.png"
@@ -154,13 +155,13 @@
                         </button>
                       </div>
                     </td>
-                  </tr>
+                  </tr> -->
                 </tbody>
               </table>
               </div>
               <div class="window-footer">
                 <button id="cancel" onclick="closer()">Đóng</button>
-                <button id="save">Lưu</button>
+                <button id="save" onclick="closer()">Lưu</button>
           </div>
       </div>
       <div class="header">
@@ -194,65 +195,24 @@
         </div>
       </div>
       <div class="body">
-        <div class="body-header">
-          <div class="body-header-left">
-            <div class="brand"></div>
-            <p class="brand-desciption">
-            </p>
-            <div><button id="added">+Thêm nhiệm vụ</button></div>
+        <div class="first-element">
+          <span class="brand">
+          </span>
+          <div class="first-element-right">
+            <span class="userTitle">Thành viên</span>
+            <div><button>+Thêm thành viên</button></div>
           </div>
-          <div class="body-header-right">
-            <div class="add-participant">
-              <div class="participant">Thành viên</div>
-              <div><button id="addedParticipant">+Thêm thành viên</button></div>
-            </div>
-            <div>
-              <ul>
-                <li>
-                  <img
-                    src="../Image/anNguyen.png"
-                    alt=""
-                    width="40px"
-                    height="40px" />
-                  <div>
-                    <span class="name">An Nguyễn</span>
-                    <br />
-                    <span class="roleInPerson">Project owner</span>
-                  </div>
-                </li>
-                <li>
-                  <img
-                    src="../Image/bachNguyen.png"
-                    alt=""
-                    width="40px"
-                    height="40px" />
-                  <div>
-                    <span class="name">Bách Nguyễn</span>
-                    <br />
-                    <span class="roleInPerson">Frontend developer</span>
-                  </div>
-                </li>
-                <li>
-                  <button class="expandButton">
-                    <img
-                      src="../Image/expandButton.png"
-                      width="40px"
-                      height="40px"
-                      alt="" />
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div class="filter">
-              <select class="select">
-                <option>Sắp xếp theo</option>
-                <option>ko bít</option>
-                <option>ko bít</option>
-              </select>
-              <input
-                type="text"
-                placeholder="Tìm kiếm nhiệm vụ" />
-            </div>
+        </div>
+        <div class="second-element">
+          <span class="brand-description"></span>
+          <div class="userListForm">
+            <ul class="userListRowForm">
+            </ul>
+            <ul>
+              <li>
+                <button class="expandButton"><img src="../Image/expandButton.png" width="40px" height="40px"></button>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="table">
@@ -286,9 +246,9 @@
                 >To do</span
               >
             </td>
-            <tbody class="table-content">
+            <tbody class="table-content" id="to-do">
               <tr>
-                <td>Soạn thảo đề cương dự án</td>
+                <!-- <td>Soạn thảo đề cương dự án</td>
                 <td class="assignedTo">An Nguyễn</td>
                 <td class="rate">Thấp</td>
                 <td class="date">02 - 24</td>
@@ -297,10 +257,10 @@
                 <td class="buttonForEdit">
                   <button class="fix">Sửa</button>
                   <button class="delete">Xóa</button>
-                </td>
+                </td> -->
               </tr>
               <tr>
-                <td>Soạn thảo đề cương dự án</td>
+                <!-- <td>Soạn thảo đề cương dự án</td>
                 <td class="assignedTo">An Nguyễn</td>
                 <td class="rate">Trung bình</td>
                 <td class="date">02 - 24</td>
@@ -309,10 +269,10 @@
                 <td class="buttonForEdit">
                   <button class="fix">Sửa</button>
                   <button class="delete">Xóa</button>
-                </td>
+                </td> -->
               </tr>
               <tr>
-                <td>Soạn thảo đề cương dự án</td>
+                <!-- <td>Soạn thảo đề cương dự án</td>
                 <td class="assignedTo">An Nguyễn</td>
                 <td class="rate">Cao</td>
                 <td class="date">02 - 24</td>
@@ -321,7 +281,7 @@
                 <td class="buttonForEdit">
                   <button class="fix">Sửa</button>
                   <button class="delete">Xóa</button>
-                </td>
+                </td> -->
               </tr>
             </tbody>
             <td colspan="7">
@@ -341,9 +301,9 @@
                 >In progress</span
               >
             </td>
-            <tbody class="table-content">
+            <tbody class="table-content" id="in-progress">
               <tr>
-                <td>Lên lịch họp kickoff</td>
+                <!-- <td>Lên lịch họp kickoff</td>
                 <td class="assignedTo">An Nguyễn</td>
                 <td class="rate">Trung bình</td>
                 <td class="date">02 - 24</td>
@@ -352,7 +312,7 @@
                 <td class="buttonForEdit">
                   <button class="fix">Sửa</button>
                   <button class="delete">Xóa</button>
-                </td>
+                </td> -->
               </tr>
             </tbody>
             <tbody>
@@ -396,6 +356,7 @@
           </table>
         </div>
       </div>
+    </div>
       <div class="footer">
         <div class="credit">
           <span>© 2025 Team management. All rights reserved.</span>
