@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Project Management</title>
+    <link
+      rel="stylesheet"
+      href="../CSS/CSS_projectManagement.css" />
+    <link
+      rel="icon"
+      href="../Image/groupProjectManagement.png"
+      type="image/x-icon" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="overlay"></div>
+      <div class="confirm-delete-window">
+        <div class="window-confirm-header">
+          <span id="add-window-header-text">Xác nhận xóa</span>
+          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-body">
+          <span id="text">Bạn chắc chắn muốn xoá dự án này?</span>
+        </div>
+        <div class="window-footer">
+          <button id="cancel" onclick="closer()">Huỷ</button>
+          <button
+            id="save">
+            Xóa
+          </button>
+        </div>
+      </div>
+      <div class="add-window">
+        <div class="window-header">
+          <span id="add-window-header-text">Thêm/sửa dự án</span>
+          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-body">
+          <span id="text">Tên dự án</span>
+          <input
+            type="text"
+            id="projectName" />
+          <span id="error"></span>
+          <span id="text">Mô tả dự án</span>
+          <textarea
+            cols="10"
+            rows="3"
+            id="projectDecribe"></textarea>
+          <span id="error2"></span>
+        </div>
+        <div class="window-footer">
+          <button id="cancel" onclick="closer()">Huỷ</button>
+          <button
+            id="save"
+            onclick="add(event)">
+            Lưu
+          </button>
+        </div>
+      </div>
+      <div class="header">
+        <div class="header-left">
+          <span>Quản Lý Dự Án</span>
+        </div>
+        <div class="header-right">
+          <ul>
+            <li>
+              <a
+                href="../HTML/HTML_projectManagement.html"
+                class="project"
+                >Dự Án</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_taskManagement.html"
+                class="task"
+                >Nhiệm Vụ của tôi</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_signIn.html"
+                class="logOut"
+                >Đăng Xuất</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="body">
+        <div class="window">
+          <div class="body-header">Quản Lý Dự Án Nhóm</div>
+          <div class="body-body">
+            <div><button class="addedProjectButton">+Thêm Dự Án</button></div>
+            <div>
+              <input
+                type="text"
+                class="projectNameInput"
+                placeholder="Tìm kiếm dự án" 
+                onkeyup=""/>
+            </div>
+          </div>
+          <div class="body-content">Danh Sách Dự Án</div>
+          <div>
+            <table id="table">
+              <thead>
+                <tr>
+                  <th class="projectId">ID</th>
+                  <th class="projectName">Tên Dự Án</th>
+                  <th class="projectAction">Hành Động</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="pages">
+        <button class="previous">&lt;</button>
+        <div class="buttonPages"></div>
+        <button class="continue">&gt;</button>
+      </div>
+      <div class="footer">
+        <div class="credit">
+          <span>© 2025 Team management. All rights reserved.</span>
+        </div>
+      </div>
+    </div>
+    <script src="../JavaScript/JS_projectManagement.js"></script>
+  </body>
+</html>

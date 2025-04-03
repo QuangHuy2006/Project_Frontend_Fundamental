@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Project Management</title>
+    <link
+      rel="stylesheet"
+      href="../CSS/CSS_mission.css" />
+    <link
+      rel="icon"
+      href="../Image/groupProjectManagement.png"
+      type="image/x-icon" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="overlay"></div>
+      <div class="add-window">
+        <div class="window-header">
+          <span id="add-window-header-text">Thêm thành viên</span>
+          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-body">
+          <span id="text">Email</span>
+          <input
+            type="text"
+            id="email" />
+          <span id="error"></span>
+          <span id="text">Vai trò</span>
+          <input
+            type="text"
+            id="role" />
+        </div>
+        <div class="window-footer">
+          <button id="cancel" onclick="closer()">Huỷ</button>
+          <button id="save">Lưu</button>
+        </div>
+      </div>
+      <div class="add-task-window">
+        <div class="window-header">
+          <span id="add-window-header-text">Thêm/sửa nhiệm vụ</span>
+          <span><button id="add-task-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-task-body">
+          <span id="text">Tên nhiệm vụ</span>
+          <input
+            type="text"
+            id="taskName" />
+          <span id="error"></span>
+          <span id="text">Người phụ trách</span>
+          <select id="assignee">
+            <option>Chọn người phụ trách</option>
+          </select>
+          <span>Trạng thái</span>
+          <select id="status">
+            <option>Chọn trạng thái nhiệm vụ</option>
+            <option>To do</option>
+            <option>In progress</option>
+            <option>Pending</option>
+            <option>Done</option>
+          </select>
+          <span>Ngày bắt đầu</span>
+          <input
+            type="date"
+            id="date" />
+          <span>Hạn cuối</span>
+          <input
+            type="date"
+            id="dueDate" />
+          <span>Độ ưu tiên</span>
+          <select>
+            <option>Chọn độ ưu tiên</option>
+            <option style="color: aqua">Thấp</option>
+            <option style="color: orange">Trung bình</option>
+            <option style="color: red">Cao</option>
+          </select>
+          <span>Tiến độ</span>
+          <select id="progress">
+            <option>Chọn tiến độ nhiệm vụ</option>
+            <option style="color: green">Đúng tiến độ</option>
+            <option style="color: orange">Có rủi ro</option>
+            <option style="color: red">Trễ hạn</option>
+          </select>
+        </div>
+        <div class="window-footer">
+          <button id="cancel" onclick="closer()">Huỷ</button>
+          <button id="save">Lưu</button>
+        </div>
+      </div>
+        <div class="userList">
+          <div class="window-header">
+            <span id="add-window-header-text">Thành viên</span>
+            <span><button id="add-task-window-header-button" onclick="closer()">X</button></span>
+          </div>
+          <div class="window-body">
+              <table id="userList" >
+                <thead>
+                    <tr>
+                      <th>Thành Viên</th>
+                      <th>Vai trò</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <img
+                    src="../Image/anNguyen.png"
+                    alt=""
+                    width="40px"
+                    height="40px" />
+                  <div style="text-align: left;">
+                    <span class="name">An Nguyễn</span>
+                    <br />
+                    <span class="email">nguyenquangan@gmail.com</span>
+                  </div>
+                    </th>
+                      <td>
+                        <div class="tableRow">
+                          <span class="role">Project owner</span>
+                          <button>
+                            <img 
+                            src="../Icon/Trash.png"
+                            width="20px"
+                            height="20px"
+                            >
+                          </button>
+                        </div>
+                      </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <img
+                    src="../Image/bachNguyen.png"
+                    alt=""
+                    width="40px"
+                    height="40px" />
+                  <div style="text-align: left;">
+                    <span class="name">Bách Nguyễn</span>
+                    <br />
+                    <span class="email">nguyenvanbach@gmail.com</span>
+                  </div>
+                    </th>
+                    <td>
+                      <div class="tableRow">
+                        <span class="role">Frontend developer</span>
+                        <button>
+                          <img 
+                          src="../Icon/Trash.png"
+                          width="20px"
+                          height="20px"
+                          >
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+              <div class="window-footer">
+                <button id="cancel" onclick="closer()">Đóng</button>
+                <button id="save">Lưu</button>
+          </div>
+      </div>
+      <div class="header">
+        <div class="header-left">
+          <span>Quản Lý Dự Án</span>
+        </div>
+        <div class="header-right">
+          <ul>
+            <li>
+              <a
+                href="../HTML/HTML_projectManagement.html"
+                class="project"
+                >Dự Án</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_taskManagement.html"
+                class="task"
+                >Nhiệm Vụ của tôi</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_signIn.html"
+                class="logOut"
+                >Đăng Xuất</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="body">
+        <div class="body-header">
+          <div class="body-header-left">
+            <div class="brand"></div>
+            <p class="brand-desciption">
+            </p>
+            <div><button id="added">+Thêm nhiệm vụ</button></div>
+          </div>
+          <div class="body-header-right">
+            <div class="add-participant">
+              <div class="participant">Thành viên</div>
+              <div><button id="addedParticipant">+Thêm thành viên</button></div>
+            </div>
+            <div>
+              <ul>
+                <li>
+                  <img
+                    src="../Image/anNguyen.png"
+                    alt=""
+                    width="40px"
+                    height="40px" />
+                  <div>
+                    <span class="name">An Nguyễn</span>
+                    <br />
+                    <span class="roleInPerson">Project owner</span>
+                  </div>
+                </li>
+                <li>
+                  <img
+                    src="../Image/bachNguyen.png"
+                    alt=""
+                    width="40px"
+                    height="40px" />
+                  <div>
+                    <span class="name">Bách Nguyễn</span>
+                    <br />
+                    <span class="roleInPerson">Frontend developer</span>
+                  </div>
+                </li>
+                <li>
+                  <button class="expandButton">
+                    <img
+                      src="../Image/expandButton.png"
+                      width="40px"
+                      height="40px"
+                      alt="" />
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div class="filter">
+              <select class="select">
+                <option>Sắp xếp theo</option>
+                <option>ko bít</option>
+                <option>ko bít</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Tìm kiếm nhiệm vụ" />
+            </div>
+          </div>
+        </div>
+        <div class="table">
+          <span class="table-header">Danh Sách Nhiệm Vụ</span>
+          <table border="1px">
+            <thead>
+              <tr>
+                <th>Tên Nhiệm Vụ</th>
+                <th>Người Phụ Trách</th>
+                <th>Ưu Tiên</th>
+                <th>Ngày Bắt Đầu</th>
+                <th>Hạn Chót</th>
+                <th>Tiến độ</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <td colspan="7">
+              <button class="buttonSpinable">
+                <img
+                  src="../Image/vector.png"
+                  width="11.15px"
+                  height="10px" />
+              </button>
+              <span
+                style="
+                  font-weight: 800;
+                  font-size: 15.47px;
+                  line-height: 20px;
+                  letter-spacing: 0px;
+                "
+                >To do</span
+              >
+            </td>
+            <tbody class="table-content">
+              <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="assignedTo">An Nguyễn</td>
+                <td class="rate">Thấp</td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Đúng tiến độ</td>
+                <td class="buttonForEdit">
+                  <button class="fix">Sửa</button>
+                  <button class="delete">Xóa</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="assignedTo">An Nguyễn</td>
+                <td class="rate">Trung bình</td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Có rủi ro</td>
+                <td class="buttonForEdit">
+                  <button class="fix">Sửa</button>
+                  <button class="delete">Xóa</button>
+                </td>
+              </tr>
+              <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="assignedTo">An Nguyễn</td>
+                <td class="rate">Cao</td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Trễ hạn</td>
+                <td class="buttonForEdit">
+                  <button class="fix">Sửa</button>
+                  <button class="delete">Xóa</button>
+                </td>
+              </tr>
+            </tbody>
+            <td colspan="7">
+              <button class="buttonSpinable">
+                <img
+                  src="../Image/vector.png"
+                  width="11.15px"
+                  height="10px" />
+              </button>
+              <span
+                style="
+                  font-weight: 800;
+                  font-size: 15.47px;
+                  line-height: 20px;
+                  letter-spacing: 0px;
+                "
+                >In progress</span
+              >
+            </td>
+            <tbody class="table-content">
+              <tr>
+                <td>Lên lịch họp kickoff</td>
+                <td class="assignedTo">An Nguyễn</td>
+                <td class="rate">Trung bình</td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Có rủi ro</td>
+                <td class="buttonForEdit">
+                  <button class="fix">Sửa</button>
+                  <button class="delete">Xóa</button>
+                </td>
+              </tr>
+            </tbody>
+            <tbody>
+              <td colspan="7">
+                <button class="buttonSpinable">
+                  <img
+                    src="../Image/vector.png"
+                    width="11.15px"
+                    height="10px" />
+                </button>
+                <span
+                  style="
+                    font-weight: 800;
+                    font-size: 15.47px;
+                    line-height: 20px;
+                    letter-spacing: 0px;
+                  "
+                  >Pending</span
+                >
+              </td>
+            </tbody>
+            <tbody>
+              <td colspan="7">
+                <button class="buttonSpinable">
+                  <img
+                    src="../Image/vector.png"
+                    width="11.15px"
+                    height="10px" />
+                </button>
+                <span
+                  style="
+                    font-weight: 800;
+                    font-size: 15.47px;
+                    line-height: 20px;
+                    letter-spacing: 0px;
+                  "
+                  >Done</span
+                >
+              </td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="credit">
+          <span>© 2025 Team management. All rights reserved.</span>
+        </div>
+      </div>
+    </div>
+    <script src="../JavaScript/JS_mission.js"></script>
+  </body>
+</html>

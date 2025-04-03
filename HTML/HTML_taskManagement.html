@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Task Management</title>
+    <link
+      rel="stylesheet"
+      href="../CSS/CSS_taskManagement.css" />
+    <link
+      rel="icon"
+      href="../Image/groupProjectManagement.png"
+      type="image/x-icon" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="overlay"></div>
+      <div class="confirm-window-input">
+        <div class="confirm-window-header">
+          <span class="confirm-window-header-text">Cập nhật trạng thái</span>
+          <div>
+            <button
+              class="confirm-window-header-button"
+              onclick="closer()">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="confirm-window-content">
+          <span class="confirm-window-content-text">
+            Trạng thái mới
+          </span>
+          <div>
+            <input type="text" id="input-value">
+            <span id="error"></span>
+          </div>
+        </div>
+        <div class="confirm-window-footer">
+          <button
+            id="cancel"
+            onclick="closer()">
+            Huỷ
+          </button>
+          <button id="save">Xác nhận</button>
+        </div>
+      </div>
+      <div class="confirm-window">
+        <div class="confirm-window-header">
+          <span class="confirm-window-header-text">Cập nhật trạng thái</span>
+          <div>
+            <button
+              class="confirm-window-header-button"
+              onclick="closer()">
+              X
+            </button>
+          </div>
+        </div>
+        <div class="confirm-window-content">
+          <span class="confirm-window-content-text">
+            Xác nhận cập nhật trạng thái nhiệm vụ
+          </span>
+        </div>
+        <div class="confirm-window-footer">
+          <button
+            id="cancel"
+            onclick="closer()">
+            Huỷ
+          </button>
+          <button id="save2">Xác nhận</button>
+        </div>
+      </div>
+      <div class="header">
+        <div class="header-left">
+          <span>Quản Lý Dự Án</span>
+        </div>
+        <div class="header-right">
+          <ul>
+            <li>
+              <a
+                href="../HTML/HTML_projectManagement.html"
+                class="project"
+                >Dự Án</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_taskManagement.html"
+                class="task"
+                >Nhiệm Vụ của tôi</a
+              >
+            </li>
+            <li>
+              <a
+                href="../HTML/HTML_signIn.html"
+                class="logOut"
+                >Đăng Xuất</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="body">
+        <div class="body-header">
+          <span>Quản lý nhiệm vụ</span>
+        </div>
+        <div class="filter">
+          <select class="select">
+            <option>Sắp xếp theo</option>
+            <option>ko bít</option>
+            <option>ko bít</option>
+          </select>
+          <input
+            type="text"
+            placeholder="Tìm kiếm nhiệm vụ" />
+        </div>
+        <div class="table">
+          <span class="table-header">Danh Sách Nhiệm Vụ</span>
+          <table border="1px">
+            <thead>
+              <tr>
+                <th class="firstRow">Tên Nhiệm Vụ</th>
+                <th>Độ Ưu Tiên</th>
+                <th>Trạng thái</th>
+                <th>Ngày Bắt Đầu</th>
+                <th>Hạn Chót</th>
+                <th class="lastRow">Tiến độ</th>
+              </tr>
+            </thead>
+            <td colspan="6">
+              <button class="buttonSpinable">
+                <img
+                  src="../Image/vector.png"
+                  width="11.15px"
+                  height="10px" />
+              </button>
+              <span
+                style="
+                  font-weight: 800;
+                  font-size: 16.11px;
+                  line-height: 20px;
+                  letter-spacing: 0px;
+                "
+                >Xây dựng website thương mại điện tử</span
+              >
+            </td>
+            <tbody class="table-content">
+              <!-- <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="rate">Thấp</td>
+                <td class="status">
+                  In progress
+                  <img
+                    src="../Icon/revise.png"
+                    id="reviseIcon" />
+                </td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Đúng tiến độ</td>
+              </tr>
+              <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="rate">Trung bình</td>
+                <td class="status">
+                  In progress
+                  <img
+                    src="../Icon/revise.png"
+                    id="reviseIcon" />
+                </td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Có rủi ro</td>
+              </tr> -->
+              <!-- <tr>
+                <td>Soạn thảo đề cương dự án</td>
+                <td class="rate">Cao</td>
+                <td class="status">
+                  Pending
+                  <img
+                    src="../Icon/revise.png"
+                    id="reviseIcon" />
+                </td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Trễ hạn</td>
+              </tr> -->
+            </tbody>
+            <td colspan="6">
+              <button class="buttonSpinable">
+                <img
+                  src="../Image/vector.png"
+                  width="11.15px"
+                  height="10px" />
+              </button>
+              <span
+                style="
+                  font-weight: 800;
+                  font-size: 16.11px;
+                  line-height: 20px;
+                  letter-spacing: 0px;
+                "
+                >Phát triển ứng dụng di động</span
+              >
+            </td>
+            <tbody class="table-content">
+              <!-- <tr>
+                <td>Lên lịch họp kickoff</td>
+                <td class="rate">Trung bình</td>
+                <td class="status">
+                  In progress
+                  <img
+                    src="../Icon/revise.png"
+                    id="reviseIcon" />
+                </td>
+                <td class="date">02 - 24</td>
+                <td class="dueDate">02 - 27</td>
+                <td class="progress">Có rủi ro</td>
+              </tr> -->
+            </tbody>
+            <tbody>
+              <td colspan="6">
+                <button class="buttonSpinable">
+                  <img
+                    src="../Image/vector.png"
+                    width="11.15px"
+                    height="10px" />
+                </button>
+                <span
+                  style="
+                    font-weight: 800;
+                    font-size: 16.16px;
+                    line-height: 20px;
+                    letter-spacing: 0px;
+                  "
+                  >Quản lý dữ liệu khách hàng</span
+                >
+              </td>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="credit">
+          <span>© 2025 Team management. All rights reserved.</span>
+        </div>
+      </div>
+    </div>
+    <script src="../JavaScript/JS_taskManagement.js"></script>
+  </body>
+</html>
