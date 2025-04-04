@@ -1,12 +1,12 @@
 let currentPage = 1;
-let totalPerPage = 2;
+let totalPerPage = 9;
 const pages = document.querySelector(".buttonPages");
 const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
 const previousButton = document.querySelector(".previous");
 const continueButton = document.querySelector(".continue");
 const saveBtn = document.querySelector("#save");
 let deletedId;
-let userLocals = JSON.parse(localStorage.getItem("task")) || [];
+let userLocals = JSON.parse(localStorage.getItem(`task${window.location.href.split("?")[1]}`)) || [];
 if (userLocals.length) {
   render(userLocals);
   renderPages();
@@ -29,14 +29,14 @@ function render(userInput) {
             <div>
                 <button class="fix">Sửa</button>
                 <button class="delete">Xóa</button>
-                <button class="detail"><a href="../HTML/HTML_mission.html?task${value.id}">Chi tiết</a></button>
+                <button class="detail"><a href="../HTML/HTML_mission.html?task${window.location.href.split("?")[1]}${value.id}">Chi tiết</a></button>
             </div>
         </td>
         `;
     row.querySelector(".fix").addEventListener("click", function (event) {
       event.preventDefault();
       user[index].name = prompt("Nhập tên dự án mới");
-      localStorage.setItem("task", JSON.stringify(userLocals));
+      localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
       render(userLocals);
     });
     row.querySelector(".delete").addEventListener("click", function (event) {
@@ -49,7 +49,7 @@ function render(userInput) {
       const totalPages = Math.ceil(userLocals.length / totalPerPage);
       const realIndex = (currentPage - 1) * totalPerPage + deletedId;
       userLocals.splice(realIndex, 1);
-      localStorage.setItem("task", JSON.stringify(userLocals));
+      localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
       render(userLocals);
       if (currentPage > totalPages) {
         currentPage = totalPages;
@@ -117,7 +117,7 @@ function add(event) {
     background.style.display = "none";
     projectDecribe.value = "";
     projectNameInput.value = "";
-    localStorage.setItem("task", JSON.stringify(userLocals));
+    localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
     renderPages();
   }
 }
@@ -174,8 +174,29 @@ function closer() {
 }
 function findByName() {
   const findName = userLocals.filter(
-    (value) => value.name == +projectNameInput2.value.trim()
+    (value) => value.name.includes(projectNameInput2.value.trim())
   );
   render(findName);
   renderPages();
 }
+const navLink = document.querySelector("#nav-links");
+const navLinks = [
+  { link: "../HTML/HTML_projectManagement.html", class: "project", name: "Dự Án"},
+  { link: "../HTML/HTML_taskManagement.html", class: "task", name: "Nhiệm vụ của tôi" },
+  { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
+];
+function renderNavLinks() {
+  navLink.textContent = "";
+  navLinks.forEach((value) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+              <a
+                href="${value.link}?${window.location.href.split("?")[1]}"
+                class="${value.link}"
+                >${value.name}</a
+              >
+    `;
+    navLink.appendChild(li);
+  });
+}
+renderNavLinks();

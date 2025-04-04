@@ -92,8 +92,9 @@ signUpButton.addEventListener("click", function (event) {
     check++;
   }
   if (check == 4) {
-    alert(`Đăng ký thành công`);
+    const newId = userLocals.length > 0 ? userLocals[userLocals.length - 1].id + 1 : 1;
     const user = {
+      id: newId,
       username: username.value,
       emailAddress: emailAddress.value,
       password: password.value,

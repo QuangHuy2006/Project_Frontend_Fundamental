@@ -51,17 +51,19 @@
             id="taskName" />
           <span id="error"></span>
           <span id="text">Người phụ trách</span>
-          <select id="assignee">
+          <select id="assignee" onchange="getAssigneeValue()">
             <option>Chọn người phụ trách</option>
           </select>
+          <span class="assigneeError"></span>
           <span>Trạng thái</span>
-          <select id="status">
+          <select id="status" onchange="getStatusValue()">
             <option>Chọn trạng thái nhiệm vụ</option>
             <option>To do</option>
             <option>In progress</option>
             <option>Pending</option>
             <option>Done</option>
           </select>
+          <span class="statusError"></span>
           <span>Ngày bắt đầu</span>
           <input
             type="date"
@@ -71,23 +73,25 @@
             type="date"
             id="dueDate" />
           <span>Độ ưu tiên</span>
-          <select>
+          <select id="priority" onchange="getPriorityValue()">
             <option>Chọn độ ưu tiên</option>
             <option style="color: aqua">Thấp</option>
             <option style="color: orange">Trung bình</option>
             <option style="color: red">Cao</option>
           </select>
+          <span class="priorityError"></span>
           <span>Tiến độ</span>
-          <select id="progress">
+          <select id="progress" onchange="getProgressValue()">
             <option>Chọn tiến độ nhiệm vụ</option>
             <option style="color: green">Đúng tiến độ</option>
             <option style="color: orange">Có rủi ro</option>
             <option style="color: red">Trễ hạn</option>
           </select>
+          <span class="progressError"></span>
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button id="save" onclick="addUser()">Lưu</button>
+          <button id="save" onclick="addTask()">Lưu</button>
         </div>
       </div>
         <div class="userList">
@@ -104,58 +108,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr>
-                    <th>
-                      <img
-                    src="../Image/anNguyen.png"
-                    alt=""
-                    width="40px"
-                    height="40px" />
-                  <div style="text-align: left;">
-                    <span class="name">An Nguyễn</span>
-                    <br />
-                    <span class="email">nguyenquangan@gmail.com</span>
-                  </div>
-                    </th>
-                      <td>
-                        <div class="tableRow">
-                          <span class="role">Project owner</span>
-                          <button>
-                            <img 
-                            src="../Icon/Trash.png"
-                            width="20px"
-                            height="20px"
-                            >
-                          </button>
-                        </div>
-                      </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <img
-                    src="../Image/bachNguyen.png"
-                    alt=""
-                    width="40px"
-                    height="40px" />
-                  <div style="text-align: left;">
-                    <span class="name">Bách Nguyễn</span>
-                    <br />
-                    <span class="email">nguyenvanbach@gmail.com</span>
-                  </div>
-                    </th>
-                    <td>
-                      <div class="tableRow">
-                        <span class="role">Frontend developer</span>
-                        <button>
-                          <img 
-                          src="../Icon/Trash.png"
-                          width="20px"
-                          height="20px"
-                          >
-                        </button>
-                      </div>
-                    </td>
-                  </tr> -->
                 </tbody>
               </table>
               </div>
@@ -169,28 +121,7 @@
           <span>Quản Lý Dự Án</span>
         </div>
         <div class="header-right">
-          <ul>
-            <li>
-              <a
-                href="../HTML/HTML_projectManagement.html"
-                class="project"
-                >Dự Án</a
-              >
-            </li>
-            <li>
-              <a
-                href="../HTML/HTML_taskManagement.html"
-                class="task"
-                >Nhiệm Vụ của tôi</a
-              >
-            </li>
-            <li>
-              <a
-                href="../HTML/HTML_signIn.html"
-                class="logOut"
-                >Đăng Xuất</a
-              >
-            </li>
+          <ul id="nav-links">
           </ul>
         </div>
       </div>
@@ -198,9 +129,9 @@
         <div class="first-element">
           <span class="brand">
           </span>
-          <div class="first-element-right">
-            <span class="userTitle">Thành viên</span>
-            <div><button>+Thêm thành viên</button></div>
+          <div class="add-participant">
+            <span class="participant">Thành viên</span>
+            <div><button id="addedParticipant">+Thêm thành viên</button></div>
           </div>
         </div>
         <div class="second-element">
@@ -213,6 +144,17 @@
                 <button class="expandButton"><img src="../Image/expandButton.png" width="40px" height="40px"></button>
               </li>
             </ul>
+          </div>
+        </div>
+        <div class="third-element">
+          <div><button id="added">+Thêm nhiệm vụ</button></div>
+          <div class="filter">
+            <select >
+              <option>Sắp xếp theo</option>
+            </select>
+            <div>
+              <input type="text" placeholder="Tìm kiếm nhiệm vụ">
+            </div>
           </div>
         </div>
         <div class="table">
@@ -247,42 +189,6 @@
               >
             </td>
             <tbody class="table-content" id="to-do">
-              <tr>
-                <!-- <td>Soạn thảo đề cương dự án</td>
-                <td class="assignedTo">An Nguyễn</td>
-                <td class="rate">Thấp</td>
-                <td class="date">02 - 24</td>
-                <td class="dueDate">02 - 27</td>
-                <td class="progress">Đúng tiến độ</td>
-                <td class="buttonForEdit">
-                  <button class="fix">Sửa</button>
-                  <button class="delete">Xóa</button>
-                </td> -->
-              </tr>
-              <tr>
-                <!-- <td>Soạn thảo đề cương dự án</td>
-                <td class="assignedTo">An Nguyễn</td>
-                <td class="rate">Trung bình</td>
-                <td class="date">02 - 24</td>
-                <td class="dueDate">02 - 27</td>
-                <td class="progress">Có rủi ro</td>
-                <td class="buttonForEdit">
-                  <button class="fix">Sửa</button>
-                  <button class="delete">Xóa</button>
-                </td> -->
-              </tr>
-              <tr>
-                <!-- <td>Soạn thảo đề cương dự án</td>
-                <td class="assignedTo">An Nguyễn</td>
-                <td class="rate">Cao</td>
-                <td class="date">02 - 24</td>
-                <td class="dueDate">02 - 27</td>
-                <td class="progress">Trễ hạn</td>
-                <td class="buttonForEdit">
-                  <button class="fix">Sửa</button>
-                  <button class="delete">Xóa</button>
-                </td> -->
-              </tr>
             </tbody>
             <td colspan="7">
               <button class="buttonSpinable">
@@ -302,18 +208,6 @@
               >
             </td>
             <tbody class="table-content" id="in-progress">
-              <tr>
-                <!-- <td>Lên lịch họp kickoff</td>
-                <td class="assignedTo">An Nguyễn</td>
-                <td class="rate">Trung bình</td>
-                <td class="date">02 - 24</td>
-                <td class="dueDate">02 - 27</td>
-                <td class="progress">Có rủi ro</td>
-                <td class="buttonForEdit">
-                  <button class="fix">Sửa</button>
-                  <button class="delete">Xóa</button>
-                </td> -->
-              </tr>
             </tbody>
             <tbody>
               <td colspan="7">

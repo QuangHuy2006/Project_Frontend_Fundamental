@@ -14,11 +14,11 @@ const save = document.querySelector("#save");
 const save2 = document.querySelector("#save2");
 const input = document.querySelector("#input-value");
 const error = document.querySelector("#error");
-revise.addEventListener("click", function (event) {
-  event.preventDefault();
-  confirmWindowInput.style.display = "block";
-  background.style.display = "block";
-});
+// revise.addEventListener("click", function (event) {
+//   event.preventDefault();
+//   confirmWindowInput.style.display = "block";
+//   background.style.display = "block";
+// });
 function closer() {
   confirmWindowInput.style.display = "none";
   confirmWindow.style.display = "none";
@@ -41,3 +41,24 @@ save2.addEventListener("click", function(event){
 function render(){
 
 }
+const navLink = document.querySelector("#nav-links");
+const navLinks = [
+  { link: "../HTML/HTML_projectManagement.html", class: "project", name: "Dự Án"},
+  { link: "../HTML/HTML_taskManagement.html", class: "task", name: "Nhiệm vụ của tôi" },
+  { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
+];
+function renderNavLinks() {
+  navLink.textContent = "";
+  navLinks.forEach((value) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+              <a
+                href="${value.link}?${window.location.href.split("?")[1]}"
+                class="${value.link}"
+                >${value.name}</a
+              >
+    `;
+    navLink.appendChild(li);
+  });
+}
+renderNavLinks();

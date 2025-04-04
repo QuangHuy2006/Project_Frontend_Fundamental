@@ -5,6 +5,7 @@ let userLocals = JSON.parse(localStorage.getItem("userInfor")) || [];
 const announce = document.querySelector(".announce");
 const emailAddressError = document.querySelector("#emailAddressError");
 const passwordError = document.querySelector("#passwordError");
+let userNumber = 0;
 signInButton.addEventListener("click", function (event) {
   event.preventDefault();
   if (userLocals.length == 0) {
@@ -34,6 +35,7 @@ signInButton.addEventListener("click", function (event) {
           emailAddress.value == userLocals[i].emailAddress &&
           password.value == userLocals[i].password
         ) {
+          userNumber = i + 1;
           announce.style.color = "green";
           announce.textContent = "Đăng nhập thành công";
           setTimeout(switchWeb, 600);
@@ -48,5 +50,5 @@ signInButton.addEventListener("click", function (event) {
 });
 
 function switchWeb() {
-  window.location.replace("HTML_ProjectManagement.html");
+  window.location.replace(`HTML_projectManagement.html?${userNumber}`);
 }

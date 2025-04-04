@@ -114,18 +114,21 @@ li {
 
 .first-element{
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between;
   align-items: center;
+  width: 68%;
 }
 .second-element{
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between ;
   align-items: center;
+  width: 68%;
 }
 .third-element{
   display: flex;
-  justify-content: space-between !important;
+  justify-content: space-between ;
   align-items: center;
+  width: 68%;
 }
 
 .first-element-right{
@@ -174,6 +177,7 @@ li {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  width: 28%;
 }
 
 .brand {
@@ -190,6 +194,7 @@ li {
   font-size: 15.99px;
   line-height: 24px;
   letter-spacing: 0px;
+  width: 50%;
 }
 
 #added {
@@ -224,15 +229,17 @@ li {
   justify-content: space-between;
   margin-top: 39px;
   gap: 10px;
+  width: 28%;
 }
 .select {
-  padding: 6px 12px;
+  padding: 4px 10px;
 }
 .filter input {
-  padding-left: 13px;
+  padding: 6px;
 }
 
 .table {
+  margin-top: 18.2px;
   border: 1px solid whitesmoke;
   width: 68%;
   border-radius: 6px;
