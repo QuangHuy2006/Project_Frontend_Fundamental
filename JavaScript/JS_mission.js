@@ -3,6 +3,7 @@ number2 = number2[number2.length - 2];
 let number = window.location.href.split("?task")[1];
 number = number[number.length - 1];
 let userLocals2 = JSON.parse(localStorage.getItem(`task${number2}`)) || [];
+const userInfor = JSON.parse(localStorage.getItem(`userInfor${number}`)) || [];
 const btn = document.querySelectorAll(".buttonSpinable");
 const tableContent = document.querySelectorAll(".table-content");
 for (let i = 0; i < btn.length; i++) {
@@ -13,7 +14,7 @@ for (let i = 0; i < btn.length; i++) {
 }
 const tableForUserList = document.querySelector("#userList tbody");
 const userListRowForm = document.querySelector(".userListRowForm");
-const userInfor = [];
+const accountLocals = JSON.parse(localStorage.getItem("userInfor")) || [];
 let cnt = 0;
 const addWindow = document.querySelector(".add-window");
 const addTaskWindow = document.querySelector(".add-task-window");
@@ -35,12 +36,8 @@ const emailError = document.querySelector("#errorEmail");
 const roleError = document.querySelector("#errorRole");
 const brand = document.querySelector(".brand");
 const brandDescription = document.querySelector(".brand-description");
-brandDescription.textContent = `${
-  userLocals2[number - 1].description
-}`;
-brand.textContent = `${
-  userLocals2[number - 1].name
-}`;
+brandDescription.textContent = `${userLocals2[number - 1].description}`;
+brand.textContent = `${userLocals2[number - 1].name}`;
 function closer() {
   addTaskWindow.style.display = "none";
   addWindow.style.display = "none";
@@ -62,31 +59,26 @@ expandButton.addEventListener("click", function (event) {
   userList.style.display = "block";
   background.style.background = "block";
 });
-let userEmailLocals =
-  JSON.parse(
-    localStorage.getItem(`userEmail${window.location.href.split("?task")[1]}`)
-  ) || [];
+let usernameIndex = 0;
 function addUser() {
   let check = 0;
-  if (!userEmail.value.trim()) {
-    emailError.textContent = "Email thành viên không được để trống";
-    userEmail.style.borderColor = "red";
-  }
-  if (userEmailLocals.length) {
-    if (
-      userEmailLocals.some((value) => value.email === userEmail.value.trim())
-    ) {
-      emailError.textContent = "Email của thành viên không được trùng lặp";
+  if (accountLocals.length) {
+    if (!userEmail.value.trim()) {
+      emailError.textContent = "Email thành viên không được để trống";
       userEmail.style.borderColor = "red";
-    } else {
+    }
+    if (
+      accountLocals.some(
+        (value) => value.emailAddress === userEmail.value.trim()
+      )
+    ) {
       emailError.textContent = "";
       userEmail.style.borderColor = "lightgray";
       check++;
+    } else {
+      emailError.textContent = "Email không tồn tại";
+      userEmail.style.borderColor = "red";
     }
-  } else {
-    emailError.textContent = "";
-    userEmail.style.borderColor = "lightgray";
-    check++;
   }
   if (!userRole.value.trim()) {
     roleError.textContent = "Vai trò thành viên không được để trống";
@@ -98,17 +90,22 @@ function addUser() {
   }
   if (check == 2) {
     const newUser = {
-      email: userEmail.value.trim(),
+      username: accountLocals[accountLocals.findIndex(value => value.emailAddress == userEmail.value.trim())].username,
+      emailAddress: userEmail.value.trim(),
       role: userRole.value.trim(),
     };
-    userEmailLocals.push(newUser);
-    localStorage.setItem(
-      `userEmail${window.location.href.split("?task")[1]}`,
-      JSON.stringify(userEmailLocals)
-    );
-    renderUser(tableForUserList);
-    renderUserList();
-    renderAssignee();
+    userInfor.push(newUser);
+    localStorage.setItem(`userInfor${number}`, JSON.stringify(userInfor));
+    if(accountLocals.some(value => value.emailAddress == userEmail.value.trim())){
+      emailError.textContent = "Email này đã được sử dụng";
+      userEmail.style.borderColor = "red";
+    }else{
+      emailError.textContent = "";
+      userEmail.style.borderColor = "lightgray";
+      renderUser(tableForUserList);
+      renderUserList();
+      renderAssignee();
+    }
     addWindow.style.display = "none";
     addTaskWindow.style.display = "none";
     background.style.display = "none";
@@ -116,19 +113,19 @@ function addUser() {
 }
 function renderUser(tableChoice) {
   tableChoice.textContent = "";
-  userEmailLocals.forEach((value, index) => {
+  userInfor.forEach((value, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `<th>
                       <div class="profilePic">
                       <span class="profileName">${
-                        value.email[0].toUpperCase() +
-                        value.email[1].toUpperCase()
+                        value.emailAddress[0].toUpperCase() +
+                        value.emailAddress[1].toUpperCase()
                       }</span>
                        </div>
                   <div style="text-align: left;">
-                    <span class="name">${value.email.split("@")[0]}</span>
+                    <span class="name">${value.username}</span>
                     <br />
-                    <span class="email">${value.email}</span>
+                    <span class="email">${value.emailAddress}</span>
                   </div>
                     </th>
                       <td>
@@ -147,10 +144,10 @@ function renderUser(tableChoice) {
       .querySelector(".removeUserFromList")
       .addEventListener("click", function (event) {
         event.preventDefault();
-        userEmailLocals.splice(index, 1);
+        userInfor.splice(index, 1);
         localStorage.setItem(
-          `userEmail${window.location.href.split("?task")[1]}`,
-          JSON.stringify(userEmailLocals)
+          `userInfor${number}`,
+          JSON.stringify(userInfor)
         );
         renderUser(tableForUserList);
         renderUserList();
@@ -165,17 +162,17 @@ function renderUser(tableChoice) {
 renderUser(tableForUserList);
 function renderUserList() {
   userListRowForm.textContent = "";
-  userEmailLocals.forEach((value) => {
+  userInfor.forEach((value) => {
     const li = document.createElement("li");
     li.classList.add("classForLiOnly");
     li.innerHTML = `<div class="profilePic">
                     <span class="profileName">${
-                      value.email[0].toUpperCase() +
-                      value.email[1].toUpperCase()
+                      value.emailAddress[0].toUpperCase() +
+                      value.emailAddress[1].toUpperCase()
                     }</span>
                     </div>
                   <div>
-                    <span class="name">${value.email.split("@")[0]}</span>
+                    <span class="name">${value.username}</span>
                     <br />
                     <span class="roleInPerson">${value.role}</span>
                   </div>`;
@@ -188,9 +185,9 @@ function renderUserList() {
 renderUserList();
 const assignee = document.querySelector("#assignee");
 function renderAssignee() {
-  userEmailLocals.forEach((value) => {
+  userInfor.forEach((value) => {
     const option = document.createElement("option");
-    option.innerHTML = `${value.email.split("@")[0]}`;
+    option.innerHTML = `${value.username}`;
     assignee.appendChild(option);
   });
 }
@@ -259,10 +256,7 @@ function getStatusValue() {
     return document.querySelector("#status").value;
   }
 }
-let taskLocal =
-  JSON.parse(
-    localStorage.getItem(`userTask${window.location.href.split("?task")[1]}`)
-  ) || [];
+let taskLocal = JSON.parse(localStorage.getItem(`userTask${number}`)) || [];
 function addTask() {
   const taskAddByUser = {
     name: taskName.value,
