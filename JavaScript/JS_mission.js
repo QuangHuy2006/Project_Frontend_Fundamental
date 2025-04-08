@@ -252,13 +252,12 @@ function getStatusValue() {
   }
 }
 const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
-taskLocal[currentUser] = taskLocal[currentUser] || 
-  {
-    todo: [],
-    inprogress: [],
-    pending: [],
-    done: [],
-  },
+taskLocal[currentUser] = taskLocal[currentUser] || {
+  todo: [],
+  inprogress: [],
+  pending: [],
+  done: [],
+};
 function addTask() {
   const dateSplit = date.value.split("-");
   const monthDate = dateSplit[1];
@@ -278,7 +277,7 @@ function addTask() {
   const status = taskAddByUser.status.toLowerCase().replace(" ", "");
   taskLocal[currentUser][status].push(taskAddByUser);
   localStorage.setItem("userTask", JSON.stringify(taskLocal));
-  // render();
+  render();
 }
 const inprogress = document.querySelector("#in-progress");
 const done = document.querySelector("#done");
@@ -289,50 +288,54 @@ function render() {
   done.textContent = "";
   pending.textContent = "";
   todo.textContent = "";
-  taskLocal[currentUser].forEach((value, index) => {
-    const row = document.createElement("tr");
-    row.classList.add("alignRow");
-    row.innerHTML = `
-    <td><span class="taskName">${value.name}</span></td>
-    <td>${value.assignee}</td>
-    <td><span class="${
-      value.priority == "Trung bình"
-        ? "priorityAverage"
-        : value.priority == "Cao"
-        ? "priorityHigh"
-        : value.priority == "Thấp"
-        ? "priorityLow"
-        : ""
-    }">${value.priority}</span></td>
-    <td class="date">${value.date}</td>
-    <td class="dueDate">${value.dueDate}</td>
-    <td>
-    <span class="${
-      value.progress == "Đúng tiến độ"
-        ? "onProgress"
-        : value.progress == "Có rủi ro"
-        ? "progressRisky"
-        : value.progress == "Trễ hạn"
-        ? "unProgressive"
-        : ""
-    }">${value.progress}</td>
-    <td>
-    <button class="fix">Sửa</button>
-    <button class="delete">Xóa</button>
-    </td>
-    `;
-    if (value.status == "Done") {
-      done.appendChild(row);
-    }
-    if (value.status == "In progress") {
-      inprogress.appendChild(row);
-    }
-    if (value.status == "Pending") {
-      pending.appendChild(row);
-    }
-    if (value.status == "To do") {
-      todo.appendChild(row);
-    }
+  const status = ["todo", "done", "pending", "inprogress"];
+  status.forEach((statusValue) => {
+    console.log(statusValue);
+    taskLocal[currentUser][statusValue].forEach((value, index) => {
+      const row = document.createElement("tr");
+      row.classList.add("alignRow");
+      row.innerHTML = `
+      <td><span class="taskName">${value.name}</span></td>
+      <td>${value.assignee}</td>
+      <td><span class="${
+        value.priority == "Trung bình"
+          ? "priorityAverage"
+          : value.priority == "Cao"
+          ? "priorityHigh"
+          : value.priority == "Thấp"
+          ? "priorityLow"
+          : ""
+      }">${value.priority}</span></td>
+        <td class="date">${value.date}</td>
+        <td class="dueDate">${value.dueDate}</td>
+        <td>
+        <span class="${
+          value.progress == "Đúng tiến độ"
+            ? "onProgress"
+            : value.progress == "Có rủi ro"
+            ? "progressRisky"
+            : value.progress == "Trễ hạn"
+            ? "unProgressive"
+            : ""
+        }">${value.progress}</td>
+          <td>
+          <button class="fix">Sửa</button>
+          <button class="delete">Xóa</button>
+          </td>
+          `;
+      if (value.status == "Done") {
+        done.appendChild(row);
+      }
+      if (value.status == "In progress") {
+        inprogress.appendChild(row);
+      }
+      if (value.status == "Pending") {
+        pending.appendChild(row);
+      }
+      if (value.status == "To do") {
+        todo.appendChild(row);
+      }
+    });
   });
   addTaskWindow.style.display = "none";
   background.style.display = "none";
@@ -348,6 +351,7 @@ function render() {
   date.value = date.defaultValue;
   dueDate.value = dueDate.defaultValue;
 }
+render();
 function closer() {
   addTaskWindow.style.display = "none";
   addWindow.style.display = "none";
