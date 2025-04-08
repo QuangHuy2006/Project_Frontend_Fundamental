@@ -1,21 +1,10 @@
-let number2 = window.location.href.split("?task")[1];
-number2 = number2[number2.length - 2];
-let number = window.location.href.split("?task")[1];
-number = number[number.length - 1];
-let userLocals2 = JSON.parse(localStorage.getItem(`task${number2}`)) || [];
-const userInfor = JSON.parse(localStorage.getItem(`userInfor${number}`)) || [];
+let userLocals = JSON.parse(localStorage.getItem("projects")) || {};
+const currentUser = localStorage.getItem("user");
 const btn = document.querySelectorAll(".buttonSpinable");
 const tableContent = document.querySelectorAll(".table-content");
-for (let i = 0; i < btn.length; i++) {
-  btn[i].addEventListener("click", function (event) {
-    btn[i].classList.toggle("rotated");
-    tableContent[i].classList.toggle("active");
-  });
-}
+const accountLocals = JSON.parse(localStorage.getItem("userInfor")) || [];
 const tableForUserList = document.querySelector("#userList tbody");
 const userListRowForm = document.querySelector(".userListRowForm");
-const accountLocals = JSON.parse(localStorage.getItem("userInfor")) || [];
-let cnt = 0;
 const addWindow = document.querySelector(".add-window");
 const addTaskWindow = document.querySelector(".add-task-window");
 const background = document.querySelector(".overlay");
@@ -36,36 +25,25 @@ const emailError = document.querySelector("#errorEmail");
 const roleError = document.querySelector("#errorRole");
 const brand = document.querySelector(".brand");
 const brandDescription = document.querySelector(".brand-description");
-brandDescription.textContent = `${userLocals2[number - 1].description}`;
-brand.textContent = `${userLocals2[number - 1].name}`;
-function closer() {
-  addTaskWindow.style.display = "none";
-  addWindow.style.display = "none";
-  background.style.display = "none";
-  userList.style.display = "none";
+brandDescription.textContent = `${
+  userLocals[currentUser][window.location.href.split("?")[1] - 1].projectDecribe
+}`;
+brand.textContent = `${
+  userLocals[currentUser][window.location.href.split("?")[1] - 1].projectName
+}`;
+for (let i = 0; i < btn.length; i++) {
+  btn[i].addEventListener("click", function (event) {
+    btn[i].classList.toggle("rotated");
+    tableContent[i].classList.toggle("active");
+  });
 }
-buttonAddUser.addEventListener("click", function (event) {
-  event.preventDefault();
-  addWindow.style.display = "block";
-  background.style.display = "block";
-});
-buttonAddTask.addEventListener("click", function (event) {
-  event.preventDefault();
-  addTaskWindow.style.display = "block";
-  background.style.display = "block";
-});
-expandButton.addEventListener("click", function (event) {
-  event.preventDefault();
-  userList.style.display = "block";
-  background.style.background = "block";
-});
-let usernameIndex = 0;
 function addUser() {
   let check = 0;
   if (accountLocals.length) {
     if (!userEmail.value.trim()) {
       emailError.textContent = "Email thành viên không được để trống";
       userEmail.style.borderColor = "red";
+      emailError.style.color = "red";
     }
     if (
       accountLocals.some(
@@ -78,59 +56,71 @@ function addUser() {
     } else {
       emailError.textContent = "Email không tồn tại";
       userEmail.style.borderColor = "red";
+      emailError.style.color = "red";
     }
   }
   if (!userRole.value.trim()) {
     roleError.textContent = "Vai trò thành viên không được để trống";
     userRole.style.borderColor = "red";
+    roleError.style.color = "red";
   } else {
     roleError.textContent = "";
     userRole.style.borderColor = "lightgray";
     check++;
   }
   if (check == 2) {
-    const newUser = {
-      username: accountLocals[accountLocals.findIndex(value => value.emailAddress == userEmail.value.trim())].username,
-      emailAddress: userEmail.value.trim(),
-      role: userRole.value.trim(),
-    };
-    userInfor.push(newUser);
-    localStorage.setItem(`userInfor${number}`, JSON.stringify(userInfor));
-    if(accountLocals.some(value => value.emailAddress == userEmail.value.trim())){
-      emailError.textContent = "Email này đã được sử dụng";
-      userEmail.style.borderColor = "red";
-    }else{
+    const newUser = [
+      {
+        email: userEmail.value.trim(),
+        name: accountLocals[
+          accountLocals.findIndex(
+            (value) => value.emailAddress === userEmail.value.trim()
+          )
+        ].username,
+        role: userRole.value.trim(),
+      },
+    ];
+    // if (
+    //   userInfor.some((value) => value.emailAddress == userEmail.value.trim())
+    // ) {
+    //   emailError.textContent = "Email này đã được sử dụng";
+    //   userEmail.style.borderColor = "red";
+    // } else {
+    userLocals[currentUser].forEach((value) => {
+      value.member.push(...newUser);
+      localStorage.setItem(`projects`, JSON.stringify(userLocals));
       emailError.textContent = "";
       userEmail.style.borderColor = "lightgray";
       renderUser(tableForUserList);
       renderUserList();
       renderAssignee();
-    }
-    addWindow.style.display = "none";
-    addTaskWindow.style.display = "none";
-    background.style.display = "none";
+      addWindow.style.display = "none";
+      addTaskWindow.style.display = "none";
+      background.style.display = "none";
+    });
   }
 }
 function renderUser(tableChoice) {
   tableChoice.textContent = "";
-  userInfor.forEach((value, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<th>
+  userLocals[currentUser].forEach((value) => {
+    value.member.forEach((member, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<th>
                       <div class="profilePic">
                       <span class="profileName">${
-                        value.emailAddress[0].toUpperCase() +
-                        value.emailAddress[1].toUpperCase()
+                        member.email[0].toUpperCase() +
+                        member.email[1].toUpperCase()
                       }</span>
                        </div>
                   <div style="text-align: left;">
-                    <span class="name">${value.username}</span>
+                    <span class="name">${member.name}</span>
                     <br />
-                    <span class="email">${value.emailAddress}</span>
+                    <span class="email">${member.email}</span>
                   </div>
                     </th>
                       <td>
                         <div class="tableRow">
-                          <span class="role">${value.role}</span>
+                          <span class="role">${member.role}</span>
                           <button class="removeUserFromList">
                             <img 
                             src="../Icon/Trash.png"
@@ -140,55 +130,60 @@ function renderUser(tableChoice) {
                           </button>
                         </div>
                       </td>`;
-    row
-      .querySelector(".removeUserFromList")
-      .addEventListener("click", function (event) {
-        event.preventDefault();
-        userInfor.splice(index, 1);
-        localStorage.setItem(
-          `userInfor${number}`,
-          JSON.stringify(userInfor)
-        );
-        renderUser(tableForUserList);
-        renderUserList();
-        renderAssignee();
-      });
-    row.querySelector(".profilePic").style.background = `rgb(${
-      Math.random() * 255
-    },${Math.random() * 255}, ${Math.random() * 255})`;
-    tableChoice.appendChild(row);
+      row
+        .querySelector(".removeUserFromList")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          userLocals[currentUser].forEach((value) => {
+            value.member.splice(index, 1);
+          });
+          localStorage.setItem(`projects`, JSON.stringify(userLocals));
+          renderUser(tableForUserList);
+          renderUserList();
+          renderAssignee();
+        });
+      row.querySelector(".profilePic").style.background = `rgb(${
+        Math.random() * 255
+      },${Math.random() * 255}, ${Math.random() * 255})`;
+      tableChoice.appendChild(row);
+    });
   });
 }
 renderUser(tableForUserList);
 function renderUserList() {
   userListRowForm.textContent = "";
-  userInfor.forEach((value) => {
-    const li = document.createElement("li");
-    li.classList.add("classForLiOnly");
-    li.innerHTML = `<div class="profilePic">
+  userLocals[currentUser].forEach((value) => {
+    value.member.forEach((value) => {
+      const li = document.createElement("li");
+      li.classList.add("classForLiOnly");
+      li.innerHTML = `<div class="profilePic">
                     <span class="profileName">${
-                      value.emailAddress[0].toUpperCase() +
-                      value.emailAddress[1].toUpperCase()
+                      value.email[0].toUpperCase() +
+                      value.email[1].toUpperCase()
                     }</span>
                     </div>
                   <div>
-                    <span class="name">${value.username}</span>
+                    <span class="name">${value.name}</span>
                     <br />
                     <span class="roleInPerson">${value.role}</span>
                   </div>`;
-    li.querySelector(".profilePic").style.background = `rgb(${
-      Math.random() * 255
-    },${Math.random() * 255}, ${Math.random() * 255})`;
-    userListRowForm.appendChild(li);
+      li.querySelector(".profilePic").style.background = `rgb(${
+        Math.random() * 255
+      },${Math.random() * 255}, ${Math.random() * 255})`;
+      userListRowForm.appendChild(li);
+    });
   });
 }
 renderUserList();
 const assignee = document.querySelector("#assignee");
 function renderAssignee() {
-  userInfor.forEach((value) => {
-    const option = document.createElement("option");
-    option.innerHTML = `${value.username}`;
-    assignee.appendChild(option);
+  assignee.length = 1;
+  userLocals[currentUser].forEach((value) => {
+    value.member.forEach((value) => {
+      const option = document.createElement("option");
+      option.innerHTML = `${value.name}`;
+      assignee.appendChild(option);
+    });
   });
 }
 renderAssignee();
@@ -246,7 +241,7 @@ function getStatusValue() {
     document.querySelector("#status").value ==
     document.querySelector("#status").options[0].value
   ) {
-    statusError.textContent = "Vui lòng chọn người phụ trách";
+    statusError.textContent = "Vui lòng chọn trạng thái";
     statusError.style.color = "red";
     document.querySelector("#status").style.borderColor = "red";
   } else {
@@ -256,47 +251,121 @@ function getStatusValue() {
     return document.querySelector("#status").value;
   }
 }
-let taskLocal = JSON.parse(localStorage.getItem(`userTask${number}`)) || [];
+const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
+taskLocal[currentUser] = taskLocal[currentUser] || 
+  {
+    todo: [],
+    inprogress: [],
+    pending: [],
+    done: [],
+  },
 function addTask() {
+  const dateSplit = date.value.split("-");
+  const monthDate = dateSplit[1];
+  const dayDate = dateSplit[2];
+  const dueDateSplit = dueDate.value.split("-");
+  const dueMonthDate = dueDateSplit[1];
+  const dueDayDate = dueDateSplit[2];
   const taskAddByUser = {
     name: taskName.value,
     assignee: getAssigneeValue(),
     status: getStatusValue(),
-    date: date.value,
-    dueDate: dueDate.value,
+    date: `${monthDate} - ${dayDate}`,
+    dueDate: `${dueMonthDate} - ${dueDayDate}`,
     priority: getPriorityValue(),
     progress: getProgressValue(),
   };
-  taskLocal.push(taskAddByUser);
+  const status = taskAddByUser.status.toLowerCase().replace(" ", "");
+  taskLocal[currentUser][status].push(taskAddByUser);
+  localStorage.setItem("userTask", JSON.stringify(taskLocal));
+  // render();
+}
+const inprogress = document.querySelector("#in-progress");
+const done = document.querySelector("#done");
+const pending = document.querySelector("#pending");
+const todo = document.querySelector("#to-do");
+function render() {
+  inprogress.textContent = "";
+  done.textContent = "";
+  pending.textContent = "";
+  todo.textContent = "";
+  taskLocal[currentUser].forEach((value, index) => {
+    const row = document.createElement("tr");
+    row.classList.add("alignRow");
+    row.innerHTML = `
+    <td><span class="taskName">${value.name}</span></td>
+    <td>${value.assignee}</td>
+    <td><span class="${
+      value.priority == "Trung bình"
+        ? "priorityAverage"
+        : value.priority == "Cao"
+        ? "priorityHigh"
+        : value.priority == "Thấp"
+        ? "priorityLow"
+        : ""
+    }">${value.priority}</span></td>
+    <td class="date">${value.date}</td>
+    <td class="dueDate">${value.dueDate}</td>
+    <td>
+    <span class="${
+      value.progress == "Đúng tiến độ"
+        ? "onProgress"
+        : value.progress == "Có rủi ro"
+        ? "progressRisky"
+        : value.progress == "Trễ hạn"
+        ? "unProgressive"
+        : ""
+    }">${value.progress}</td>
+    <td>
+    <button class="fix">Sửa</button>
+    <button class="delete">Xóa</button>
+    </td>
+    `;
+    if (value.status == "Done") {
+      done.appendChild(row);
+    }
+    if (value.status == "In progress") {
+      inprogress.appendChild(row);
+    }
+    if (value.status == "Pending") {
+      pending.appendChild(row);
+    }
+    if (value.status == "To do") {
+      todo.appendChild(row);
+    }
+  });
   addTaskWindow.style.display = "none";
   background.style.display = "none";
+  taskName.value = "";
+  document.querySelector("#priority").value =
+    document.querySelector("#priority").options[0].value;
+  document.querySelector("#progress").value =
+    document.querySelector("#progress").options[0].value;
+  document.querySelector("#status").value =
+    document.querySelector("#status").options[0].value;
+  document.querySelector("#assignee").value =
+    document.querySelector("#assignee").options[0].value;
+  date.value = date.defaultValue;
+  dueDate.value = dueDate.defaultValue;
 }
-const navLink = document.querySelector("#nav-links");
-const navLinks = [
-  {
-    link: "../HTML/HTML_projectManagement.html",
-    class: "project",
-    name: "Dự Án",
-  },
-  {
-    link: "../HTML/HTML_taskManagement.html",
-    class: "task",
-    name: "Nhiệm vụ của tôi",
-  },
-  { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
-];
-function renderNavLinks() {
-  navLink.textContent = "";
-  navLinks.forEach((value) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-              <a
-                href="${value.link}?${number}"
-                class="${value.link}"
-                >${value.name}</a
-              >
-    `;
-    navLink.appendChild(li);
-  });
+function closer() {
+  addTaskWindow.style.display = "none";
+  addWindow.style.display = "none";
+  background.style.display = "none";
+  userList.style.display = "none";
 }
-renderNavLinks();
+buttonAddUser.addEventListener("click", function (event) {
+  event.preventDefault();
+  addWindow.style.display = "block";
+  background.style.display = "block";
+});
+buttonAddTask.addEventListener("click", function (event) {
+  event.preventDefault();
+  addTaskWindow.style.display = "block";
+  background.style.display = "block";
+});
+expandButton.addEventListener("click", function (event) {
+  event.preventDefault();
+  userList.style.display = "block";
+  background.style.background = "block";
+});

@@ -14,6 +14,7 @@ signUpButton.addEventListener("click", function (event) {
   if (!username.value.trim()) {
     usernameError.textContent = "Tên đăng kí không được để trống";
     username.style.borderColor = "red";
+    usernameError.style.color = "red";
   }
   if (userLocals.length) {
     if (
@@ -23,10 +24,12 @@ signUpButton.addEventListener("click", function (event) {
     ) {
       usernameError.textContent = "Tên đăng kí đã tồn tại";
       username.style.borderColor = "red";
+      usernameError.style.color = "red";
     } else {
       if (username.value.trim()) {
         usernameError.textContent = "";
         username.style.borderColor = "whitesmoke";
+        usernameError.style.color = "black"
         check++;
       }
     }
@@ -40,9 +43,11 @@ signUpButton.addEventListener("click", function (event) {
   if (!emailAddress.value.trim()) {
     emailAddressError.textContent = "Email không được để trống";
     emailAddress.style.borderColor = "red";
+    emailAddressError.style.color = "red";
   } else if (!emailAddress.value.includes("@")) {
     emailAddressError.textContent = "Email phải có kí tự '@'";
     emailAddress.style.borderColor = "red";
+    emailAddressError.style.color = "red";
   }
   if (userLocals.length) {
     if (
@@ -52,6 +57,7 @@ signUpButton.addEventListener("click", function (event) {
     ) {
       emailAddressError.textContent = "Email đã tồn tại";
       emailAddress.style.borderColor = "red";
+      emailAddressError.style.color = "red";
     } else {
       if (emailAddress.value.trim()) {
         emailAddressError.textContent = "";
@@ -69,9 +75,11 @@ signUpButton.addEventListener("click", function (event) {
   if (!password.value.trim()) {
     passwordError.textContent = "Mật khẩu không được để trống";
     password.style.borderColor = "red";
-  }else if(password.value.length < 8){
+    passwordError.style.color = "red";
+  } else if (password.value.length < 8) {
     passwordError.textContent = "Mật khẩu không đủ dài";
     password.style.borderColor = "red";
+    passwordError.style.color = "red";
   } else {
     passwordError.textContent = "";
     password.style.borderColor = "whitesmoke";
@@ -80,19 +88,23 @@ signUpButton.addEventListener("click", function (event) {
   if (!confirmPassword.value.trim()) {
     confirmPasswordError.textContent = "Mật khẩu không được để trống";
     confirmPassword.style.borderColor = "red";
+    confirmPasswordError.style.color = "red";
   } else if (!(confirmPassword.value.trim() === password.value.trim())) {
     confirmPasswordError.textContent = "Mật khẩu không khớp";
     confirmPassword.style.borderColor = "red";
-  } else if(confirmPassword.value.length < 8){
+    confirmPasswordError.style.color = "red";
+  } else if (confirmPassword.value.length < 8) {
     confirmPasswordError.textContent = "Mật khẩu không đủ dài";
     confirmPassword.style.borderColor = "red";
+    confirmPasswordError.style.color = "red";
   } else {
     confirmPasswordError.textContent = "";
     confirmPassword.style.borderColor = "whitesmoke";
     check++;
   }
   if (check == 4) {
-    const newId = userLocals.length > 0 ? userLocals[userLocals.length - 1].id + 1 : 1;
+    const newId =
+      userLocals.length > 0 ? userLocals[userLocals.length - 1].id + 1 : 1;
     const user = {
       id: newId,
       username: username.value,
@@ -105,7 +117,17 @@ signUpButton.addEventListener("click", function (event) {
     emailAddress.value = "";
     password.value = "";
     confirmPassword.value = "";
-    if (confirm("Bạn có muốn chuyển dến trang đăng nhập luôn không?"))
-      window.location.replace("HTML_SignIn.html");
+    showAlert();
+    
   }
 });
+function showAlert() {
+  Swal.fire({
+    title: "Success!",
+    text: "Đăng kí thành công!",
+    icon: "success",
+    timer: 3000,
+  }).then(() =>{
+    window.location.replace("HTML_SignIn.html");
+  });
+}

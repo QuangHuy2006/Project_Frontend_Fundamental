@@ -38,27 +38,3 @@ save.addEventListener("click", function (event) {
 save2.addEventListener("click", function(event){
     event.preventDefault();
 })
-function render(){
-
-}
-const navLink = document.querySelector("#nav-links");
-const navLinks = [
-  { link: "../HTML/HTML_projectManagement.html", class: "project", name: "Dự Án"},
-  { link: "../HTML/HTML_taskManagement.html", class: "task", name: "Nhiệm vụ của tôi" },
-  { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
-];
-function renderNavLinks() {
-  navLink.textContent = "";
-  navLinks.forEach((value) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-              <a
-                href="${value.link}?${window.location.href.split("?")[1]}"
-                class="${value.link}"
-                >${value.name}</a
-              >
-    `;
-    navLink.appendChild(li);
-  });
-}
-renderNavLinks();

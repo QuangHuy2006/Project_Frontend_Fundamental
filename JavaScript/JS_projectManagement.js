@@ -1,128 +1,25 @@
 let currentPage = 1;
 let totalPerPage = 9;
 const pages = document.querySelector(".buttonPages");
-const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
 const previousButton = document.querySelector(".previous");
 const continueButton = document.querySelector(".continue");
-const saveBtn = document.querySelector("#save");
-let deletedId;
-let userLocals = JSON.parse(localStorage.getItem(`task${window.location.href.split("?")[1]}`)) || [];
-if (userLocals.length) {
-  render(userLocals);
-  renderPages();
-}
-function render(userInput) {
-  const user = [];
-  const getFirstElementEachPage = (currentPage - 1) * totalPerPage;
-  const getLastElementEachPage = totalPerPage * currentPage;
-  user.push(
-    ...userInput.slice(getFirstElementEachPage, getLastElementEachPage)
-  );
-  const table = document.querySelector("#table tbody");
-  table.textContent = "";
-  user.forEach((value, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-        <td>${value.id}</td>
-        <td id="projectName">${value.name}</td>
-        <td id="projectAction">
-            <div>
-                <button class="fix">Sửa</button>
-                <button class="delete">Xóa</button>
-                <button class="detail"><a href="../HTML/HTML_mission.html?task${window.location.href.split("?")[1]}${value.id}">Chi tiết</a></button>
-            </div>
-        </td>
-        `;
-    row.querySelector(".fix").addEventListener("click", function (event) {
-      event.preventDefault();
-      user[index].name = prompt("Nhập tên dự án mới");
-      localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
-      render(userLocals);
-    });
-    row.querySelector(".delete").addEventListener("click", function (event) {
-      event.preventDefault();
-      confirmDeleteWindow.style.display = "block";
-      background.style.display = "block";
-      deletedId = index;
-    });
-    saveBtn.onclick = function () {
-      const totalPages = Math.ceil(userLocals.length / totalPerPage);
-      const realIndex = (currentPage - 1) * totalPerPage + deletedId;
-      userLocals.splice(realIndex, 1);
-      localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
-      render(userLocals);
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
-      }
-      confirmDeleteWindow.style.display = "none";
-      background.style.display = "none";
-    };
-    table.appendChild(row);
-  });
-}
-const addBtn = document.querySelector(".addedProjectButton");
-const addWindow = document.querySelector(".add-window");
-const background = document.querySelector(".overlay");
-const cancelBtn = document.querySelector("#add-window-header-button");
-addBtn.addEventListener("click", function (event) {
-  event.preventDefault();
-  addWindow.style.display = "block";
-  background.style.display = "block";
-});
-const projectNameInput = document.querySelector("#projectName");
-const projectNameInput2 = document.querySelector(".projectNameInput");
+const addProjectWindow = document.querySelector(".add-window");
+const projectName = document.querySelector("#projectName");
+const projectNameError = document.querySelector("#error");
 const projectDecribe = document.querySelector("#projectDecribe");
-const error1 = document.querySelector("#error");
-const error2 = document.querySelector("#error2");
-function add(event) {
-  let check = 0;
-  event.preventDefault();
-  if (!projectDecribe.value.trim()) {
-    error2.textContent = "Dữ liệu không được để trống";
-    projectDecribe.style.borderColor = "red";
-  } else {
-    error2.textContent = "";
-    projectDecribe.style.borderColor = "lightgray";
-    check++;
-  }
-  if (!projectNameInput.value.trim()) {
-    error1.textContent = "Dữ liệu không được để trống";
-    projectNameInput.style.borderColor = "red";
-  }
-  if (userLocals.length) {
-    if (userLocals.some((value) => value.name === projectNameInput.value)) {
-      error1.textContent = "Dữ liệu không được trùng lặp";
-      projectNameInput.style.borderColor = "red";
-    } else {
-      error1.textContent = "";
-      projectNameInput.style.borderColor = "lightgray";
-      check++;
-    }
-  } else {
-    error1.textContent = "";
-    projectNameInput.style.borderColor = "lightgray";
-    check++;
-  }
-  if (check == 2) {
-    let newId =
-      userLocals.length > 0 ? userLocals[userLocals.length - 1].id + 1 : 1;
-    const newTask = {
-      id: newId,
-      name: projectNameInput.value,
-      description: projectDecribe.value,
-    };
-    userLocals.push(newTask);
-    render(userLocals);
-    addWindow.style.display = "none";
-    background.style.display = "none";
-    projectDecribe.value = "";
-    projectNameInput.value = "";
-    localStorage.setItem(`task${window.location.href.split("?")[1]}`, JSON.stringify(userLocals));
-    renderPages();
-  }
-}
+const projectDecribeError = document.querySelector("#error2");
+const table = document.querySelector("#table tbody");
+const background = document.querySelector(".overlay");
+let projectLocals = JSON.parse(localStorage.getItem("projects")) || {};
+const buttonAddWindow = document.querySelector(".addedProjectButton");
+const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
+const saveBtn = document.querySelector("#save");
+const projectNameInput2 = document.querySelector(".projectNameInput");
+const currentUser = localStorage.getItem("user");
+projectLocals[currentUser] = projectLocals[currentUser] || [];
+const userInfor = JSON.parse(localStorage.getItem("userInfor")) || [];
 function renderPages() {
-  const totalPages = Math.ceil(userLocals.length / totalPerPage);
+  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
   pages.textContent = "";
   for (let i = 1; i <= totalPages; i++) {
     const singlePages = document.createElement("button");
@@ -131,7 +28,7 @@ function renderPages() {
       event.preventDefault();
       currentPage = i;
       renderPages();
-      render(userLocals);
+      render(projectLocals[currentUser]);
     });
     if (currentPage === i) {
       singlePages.classList.add("btn-active");
@@ -151,52 +48,151 @@ function renderPages() {
   }
 }
 continueButton.addEventListener("click", function (event) {
-  const totalPages = Math.ceil(userLocals.length / totalPerPage);
+  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
   event.preventDefault();
   if (currentPage < totalPages) {
     currentPage++;
     renderPages();
-    render(userLocals);
+    render(projectLocals[currentUser]);
   }
 });
 previousButton.addEventListener("click", function (event) {
-  const totalPages = Math.ceil(userLocals.length / totalPerPage);
+  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
   event.preventDefault();
   if (currentPage > 1) {
     currentPage--;
     renderPages();
-    render(userLocals);
+    render(projectLocals[currentUser]);
   }
 });
 function closer() {
   addWindow.style.display = "none";
   background.style.display = "none";
+  confirmDeleteWindow.style.display = "none";
 }
 function findByName() {
-  const findName = userLocals.filter(
-    (value) => value.name.includes(projectNameInput2.value.trim())
+  const findName = projectLocals[currentUser].filter((value) =>
+    value.projectName.includes(projectNameInput2.value.trim())
   );
   render(findName);
   renderPages();
 }
 const navLink = document.querySelector("#nav-links");
 const navLinks = [
-  { link: "../HTML/HTML_projectManagement.html", class: "project", name: "Dự Án"},
-  { link: "../HTML/HTML_taskManagement.html", class: "task", name: "Nhiệm vụ của tôi" },
+  {
+    link: "../HTML/HTML_projectManagement.html",
+    class: "project",
+    name: "Dự Án",
+  },
+  {
+    link: "../HTML/HTML_taskManagement.html",
+    class: "task",
+    name: "Nhiệm vụ của tôi",
+  },
   { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
 ];
-function renderNavLinks() {
-  navLink.textContent = "";
-  navLinks.forEach((value) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-              <a
-                href="${value.link}?${window.location.href.split("?")[1]}"
-                class="${value.link}"
-                >${value.name}</a
-              >
-    `;
-    navLink.appendChild(li);
+buttonAddWindow.addEventListener("click", function(event){
+  event.preventDefault();
+  addProjectWindow.style.display = "block";
+  background.style.display = "block";
+})
+function addUser() {
+  let checkIfValueValid = 0;
+  if (!projectName.value.trim()) {
+    projectNameError.textContent = "Tên dự án không được để trống!";
+    projectName.style.borderColor = "red";
+    projectNameError.style.color = "red";
+  } else {
+    projectNameError.textContent = "";
+    projectName.style.borderColor = "lightgray";
+    projectNameError.style.color = "lightgray";
+    checkIfValueValid++;
+  }
+  if (!projectDecribe.value.trim()) {
+    projectDecribeError.textContent = "Tên dự án không được để trống!";
+    projectDecribe.style.borderColor = "red";
+    projectDecribeError.style.color = "red";
+  } else {
+    projectDecribeError.textContent = "";
+    projectDecribe.style.borderColor = "lightgray";
+    projectDecribeError.style.color = "lightgray";
+    checkIfValueValid++;
+  }
+  if (checkIfValueValid == 2) {
+    const projectId = projectLocals[currentUser].length
+      ? projectLocals[currentUser][projectLocals[currentUser].length - 1].id + 1
+      : 1;
+    const project = {
+      id: projectId,
+      projectName: projectName.value.trim(),
+      projectDecribe: projectDecribe.value.trim(),
+      member: [
+        {
+          email: localStorage.getItem("user"),
+          name: userInfor[userInfor.findIndex(value => value.emailAddress === localStorage.getItem("user"))].username,
+          role: "Project owner",
+        },
+      ],
+    };
+    if (!projectLocals[currentUser]) {
+      projectLocals[currentUser] = [];
+    }
+    projectLocals[currentUser].push(project);
+    localStorage.setItem("projects", JSON.stringify(projectLocals));
+    render(projectLocals[currentUser]);
+    renderPages();
+    addProjectWindow.style.display = "none";
+    background.style.display = "none";
+    projectDecribe.value = "";
+    projectName.value = "";
+  }
+}
+if(projectLocals[currentUser].length){
+  render(projectLocals[currentUser]);
+  renderPages();
+}
+function render(userInput) {
+  const getFirstElementEachPage = (currentPage - 1) * totalPerPage;
+  const getLastElementEachPage = totalPerPage * currentPage;
+  const user = userInput.slice(getFirstElementEachPage, getLastElementEachPage)
+  table.textContent = "";
+  user.forEach((value, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+        <td>${value.id}</td>
+        <td id="projectName">${value.projectName}</td>
+        <td id="projectAction">
+            <div>
+                <button class="fix">Sửa</button>
+                <button class="delete">Xóa</button>
+                <button class="detail"><a href="../HTML/HTML_mission.html?${value.id}">Chi tiết</a></button>
+            </div>
+        </td>
+        `;
+    row.querySelector(".fix").addEventListener("click", function (event) {
+      event.preventDefault();
+      user[index].projectName = prompt("Nhập tên dự án mới");
+      localStorage.setItem("projects", JSON.stringify(projectLocals));
+      render(projectLocals[currentUser]);
+    });
+    row.querySelector(".delete").addEventListener("click", function (event) {
+      event.preventDefault();
+      confirmDeleteWindow.style.display = "block";
+      background.style.display = "block";
+      deletedId = index;
+    });
+    saveBtn.onclick = function () {
+      const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
+      const realIndex = (currentPage - 1) * totalPerPage + deletedId;
+      projectLocals[currentUser].splice(realIndex, 1);
+      localStorage.setItem(`projects`, JSON.stringify(projectLocals));
+      render(projectLocals[currentUser]);
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+      confirmDeleteWindow.style.display = "none";
+      background.style.display = "none";
+    };
+    table.appendChild(row);
   });
 }
-renderNavLinks();

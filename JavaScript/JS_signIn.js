@@ -15,19 +15,22 @@ signInButton.addEventListener("click", function (event) {
       if (!emailAddress.value.trim()) {
         emailAddressError.textContent = "Email không được để trống";
         emailAddress.style.borderColor = "red";
+        emailAddressError.style.color = "red";
       } else if (!emailAddress.value.includes("@")) {
         emailAddressError.textContent = "Email phải có kí tự '@'";
         emailAddress.style.borderColor = "red";
+        emailAddressError.style.color = "red";
       } else {
         emailAddressError.textContent = "";
         emailAddress.style.borderColor = "whitesmoke";
       }
-      if (!username.value.trim()) {
-        usernameError.textContent = "Tên đăng kí không được để trống";
-        username.style.borderColor = "red";
+      if (!password.value.trim()) {
+        passwordError.textContent = "Tên đăng kí không được để trống";
+        password.style.borderColor = "red";
+        passwordError.style.color = "red";
       } else {
-        usernameError.textContent = "";
-        username.style.borderColor = "whitesmoke";
+        passwordError.textContent = "";
+        password.style.borderColor = "whitesmoke";
       }
     } else {
       for (let i = 0; i < userLocals.length; i++) {
@@ -36,6 +39,7 @@ signInButton.addEventListener("click", function (event) {
           password.value == userLocals[i].password
         ) {
           userNumber = i + 1;
+          localStorage.setItem("user", emailAddress.value);
           announce.style.color = "green";
           announce.textContent = "Đăng nhập thành công";
           setTimeout(switchWeb, 600);
