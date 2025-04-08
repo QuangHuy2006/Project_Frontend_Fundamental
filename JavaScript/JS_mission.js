@@ -323,6 +323,18 @@ function render() {
           <button class="delete">Xóa</button>
           </td>
           `;
+          row.querySelector(".fix").addEventListener("click", function(event){
+            event.preventDefault();
+            taskLocal[currentUser][statusValue][index].name = prompt("Nhập tên mới cho nhiệm vụ");
+            localStorage.setItem("userTask", JSON.stringify(taskLocal));
+            render();
+          })
+          row.querySelector(".delete").addEventListener("click", function(event){
+            event.preventDefault();
+            taskLocal[currentUser][statusValue].splice(index, 1);
+            localStorage.setItem("userTask", JSON.stringify(taskLocal));
+            render();
+          })
       if (value.status == "Done") {
         done.appendChild(row);
       }
