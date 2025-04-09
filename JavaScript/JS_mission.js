@@ -1,42 +1,86 @@
 let userLocals = JSON.parse(localStorage.getItem("projects")) || {};
+
 const currentUser = localStorage.getItem("user");
+
 const btn = document.querySelectorAll(".buttonSpinable");
+
 const tableContent = document.querySelectorAll(".table-content");
+
 const accountLocals = JSON.parse(localStorage.getItem("userInfor")) || [];
+
 const tableForUserList = document.querySelector("#userList tbody");
+
 const userListRowForm = document.querySelector(".userListRowForm");
+
 const addWindow = document.querySelector(".add-window");
+
 const addTaskWindow = document.querySelector(".add-task-window");
+
 const background = document.querySelector(".overlay");
+
 const cancelBtn = document.querySelector("#add-window-header-button");
+
 const buttonAddUser = document.querySelector("#addedParticipant");
+
 const userEmail = document.querySelector("#email");
+
 const userRole = document.querySelector("#role");
+
 const buttonAddTask = document.querySelector("#added");
+
 const taskName = document.querySelector("#taskName");
+
 const date = document.querySelector("#date");
+
 const dueDate = document.querySelector("#dueDate");
+
+const usedEmail = [];
+
+function checkValidEmail() {
+  userLocals[currentUser].forEach((value) => {
+    value.member.forEach((members, index) => {
+      if (members.email != usedEmail[index]) {
+        usedEmail.push(members.email);
+      }
+    });
+  });
+}
+checkValidEmail();
 const buttonCancelTask = document.querySelector(
   "#add-task-window-header-button"
 );
+
 const expandButton = document.querySelector(".expandButton");
+
 const userList = document.querySelector(".userList");
+
 const emailError = document.querySelector("#errorEmail");
+
 const roleError = document.querySelector("#errorRole");
+
 const brand = document.querySelector(".brand");
+
 const brandDescription = document.querySelector(".brand-description");
+
 brandDescription.textContent = `${
   userLocals[currentUser][window.location.href.split("?")[1] - 1].projectDecribe
 }`;
+
 brand.textContent = `${
   userLocals[currentUser][window.location.href.split("?")[1] - 1].projectName
 }`;
+
+const cancel = document.querySelector("#cancel");
+
+const save = document.querySelector("#save");
+
 for (let i = 0; i < btn.length; i++) {
   btn[i].addEventListener("click", function (event) {
     btn[i].classList.toggle("rotated");
     tableContent[i].classList.toggle("active");
   });
 }
+
 function addUser() {
   let check = 0;
   if (accountLocals.length) {
@@ -69,38 +113,58 @@ function addUser() {
     check++;
   }
   if (check == 2) {
-    const newUser = [
-      {
-        email: userEmail.value.trim(),
-        name: accountLocals[
-          accountLocals.findIndex(
-            (value) => value.emailAddress === userEmail.value.trim()
-          )
-        ].username,
-        role: userRole.value.trim(),
-      },
-    ];
-    // if (
-    //   userInfor.some((value) => value.emailAddress == userEmail.value.trim())
-    // ) {
-    //   emailError.textContent = "Email này đã được sử dụng";
-    //   userEmail.style.borderColor = "red";
-    // } else {
-    userLocals[currentUser].forEach((value) => {
-      value.member.push(...newUser);
-      localStorage.setItem(`projects`, JSON.stringify(userLocals));
-      emailError.textContent = "";
-      userEmail.style.borderColor = "lightgray";
-      renderUser(tableForUserList);
-      renderUserList();
-      renderAssignee();
-      addWindow.style.display = "none";
-      addTaskWindow.style.display = "none";
-      background.style.display = "none";
-    });
+    const newUser = {
+      email: userEmail.value.trim(),
+      name: accountLocals[
+        accountLocals.findIndex(
+          (value) => value.emailAddress === userEmail.value.trim()
+        )
+      ].username,
+      role: userRole.value.trim(),
+    };
+    if (usedEmail.length) {
+      if (
+        usedEmail.some((valueEmail) => valueEmail === userEmail.value.trim())
+      ) {
+        emailError.textContent = "Email này đã được sử dụng";
+        userEmail.style.borderColor = "red";
+      } else {
+        userLocals[currentUser].forEach((value) => {
+          value.member.push(newUser);
+          localStorage.setItem(`projects`, JSON.stringify(userLocals));
+          emailError.textContent = "";
+          userEmail.style.borderColor = "lightgray";
+          renderUser(tableForUserList);
+          renderUserList();
+          renderAssignee();
+          checkValidEmail();
+          addWindow.style.display = "none";
+          addTaskWindow.style.display = "none";
+          background.style.display = "none";
+        });
+      }
+    } else {
+      userLocals[currentUser].forEach((value) => {
+        value.member.push(newUser);
+        localStorage.setItem(`projects`, JSON.stringify(userLocals));
+        emailError.textContent = "";
+        userEmail.style.borderColor = "lightgray";
+        renderUser(tableForUserList);
+        renderUserList();
+        renderAssignee();
+        checkValidEmail();
+        addWindow.style.display = "none";
+        addTaskWindow.style.display = "none";
+        background.style.display = "none";
+      });
+    }
   }
 }
+const deleteIndex = [];
+const changeRoleInput = [];
 function renderUser(tableChoice) {
+  deleteIndex.length = 0;
+  changeRoleInput.length = 0;
   tableChoice.textContent = "";
   userLocals[currentUser].forEach((value) => {
     value.member.forEach((member, index) => {
@@ -120,7 +184,9 @@ function renderUser(tableChoice) {
                     </th>
                       <td>
                         <div class="tableRow">
-                          <span class="role">${member.role}</span>
+                          <span class="role"><input type="text" class="changeRole" value="${
+                            member.role
+                          }"></span>
                           <button class="removeUserFromList">
                             <img 
                             src="../Icon/Trash.png"
@@ -130,23 +196,50 @@ function renderUser(tableChoice) {
                           </button>
                         </div>
                       </td>`;
-      row
-        .querySelector(".removeUserFromList")
-        .addEventListener("click", function (event) {
-          event.preventDefault();
-          userLocals[currentUser].forEach((value) => {
-            value.member.splice(index, 1);
-          });
-          localStorage.setItem(`projects`, JSON.stringify(userLocals));
-          renderUser(tableForUserList);
-          renderUserList();
-          renderAssignee();
-        });
       row.querySelector(".profilePic").style.background = `rgb(${
         Math.random() * 255
       },${Math.random() * 255}, ${Math.random() * 255})`;
+      row.querySelector(".changeRole").addEventListener("click", function () {
+        changeRoleInput.push(index);
+      });
+      row
+        .querySelector(".removeUserFromList")
+        .addEventListener("click", function () {
+          row.classList.add("hide");
+          deleteIndex.push(index);
+        });
+
       tableChoice.appendChild(row);
     });
+  });
+  cancel.addEventListener("click", function () {
+    document
+      .querySelectorAll("tr")
+      .forEach((row) => row.classList.remove("hide"));
+    document.querySelectorAll(".changeRole").forEach((input) => {
+      input.value = input.defaultValue;
+    });
+    userList.style.display = "none";
+    background.style.display = "none";
+  });
+  save.addEventListener("click", function () {
+    deleteIndex.forEach((indexNeedToDeleted) => {
+      userLocals[currentUser].forEach((value) => {
+        usedEmail.splice(
+          usedEmail.findIndex(
+            (value2) => value2 === value.member[indexNeedToDeleted].email
+          ),
+          1
+        );
+        value.member.splice(indexNeedToDeleted, 1);
+      });
+    });
+    localStorage.setItem(`projects`, JSON.stringify(userLocals));
+    renderUser(tableForUserList);
+    renderUserList();
+    renderAssignee();
+    userList.style.display = "none";
+    background.style.display = "none";
   });
 }
 renderUser(tableForUserList);
@@ -279,6 +372,7 @@ function addTask() {
   localStorage.setItem("userTask", JSON.stringify(taskLocal));
   render();
 }
+const changeRole = document.querySelectorAll(".changeRole");
 const inprogress = document.querySelector("#in-progress");
 const done = document.querySelector("#done");
 const pending = document.querySelector("#pending");
@@ -290,7 +384,6 @@ function render() {
   todo.textContent = "";
   const status = ["todo", "done", "pending", "inprogress"];
   status.forEach((statusValue) => {
-    console.log(statusValue);
     taskLocal[currentUser][statusValue].forEach((value, index) => {
       const row = document.createElement("tr");
       row.classList.add("alignRow");
@@ -323,18 +416,20 @@ function render() {
           <button class="delete">Xóa</button>
           </td>
           `;
-          row.querySelector(".fix").addEventListener("click", function(event){
-            event.preventDefault();
-            taskLocal[currentUser][statusValue][index].name = prompt("Nhập tên mới cho nhiệm vụ");
-            localStorage.setItem("userTask", JSON.stringify(taskLocal));
-            render();
-          })
-          row.querySelector(".delete").addEventListener("click", function(event){
-            event.preventDefault();
-            taskLocal[currentUser][statusValue].splice(index, 1);
-            localStorage.setItem("userTask", JSON.stringify(taskLocal));
-            render();
-          })
+      row.querySelector(".fix").addEventListener("click", function (event) {
+        event.preventDefault();
+        taskLocal[currentUser][statusValue][index].name = prompt(
+          "Nhập tên mới cho nhiệm vụ"
+        );
+        localStorage.setItem("userTask", JSON.stringify(taskLocal));
+        render();
+      });
+      row.querySelector(".delete").addEventListener("click", function (event) {
+        event.preventDefault();
+        taskLocal[currentUser][statusValue].splice(index, 1);
+        localStorage.setItem("userTask", JSON.stringify(taskLocal));
+        render();
+      });
       if (value.status == "Done") {
         done.appendChild(row);
       }
@@ -385,3 +480,52 @@ expandButton.addEventListener("click", function (event) {
   userList.style.display = "block";
   background.style.background = "block";
 });
+const previousObject = { todo: [], inprogress: [], pending: [], done: [] };
+const findTask = document.querySelector("#findTask");
+function findByName() {
+  const status = ["todo", "done", "pending", "inprogress"];
+  if (findTask.value.trim()) {
+    status.forEach((statusValue) => {
+      previousObject[statusValue] = taskLocal[currentUser][statusValue];
+    });
+    status.forEach((statusValue) => {
+      taskLocal[currentUser][statusValue] = taskLocal[currentUser][
+        statusValue
+      ].filter((value) => value.name.includes(findTask.value.trim()));
+    });
+    render();
+  } else {
+    status.forEach((statusValue) => {
+      taskLocal[currentUser][statusValue] = previousObject[statusValue];
+    });
+    render();
+  }
+}
+console.log(taskLocal[currentUser].todo);
+function sortByOption() {
+  const status = ["todo", "done", "pending", "inprogress"];
+  status.forEach((statusValue) => {
+    for (let i = 0; i < taskLocal[currentUser][statusValue].length; i++) {
+      for (
+        let j = 0;
+        j < taskLocal[currentUser][statusValue].length - 1 - i;
+        j++
+      ) {
+        if (
+          taskLocal[currentUser][statusValue][j].name >
+          taskLocal[currentUser][statusValue][j + 1].name
+        ) {
+          let temp = taskLocal[currentUser][statusValue][j];
+          taskLocal[currentUser][statusValue][j] =
+            taskLocal[currentUser][statusValue][j + 1];
+          taskLocal[currentUser][statusValue][j + 1] = temp;
+        }
+      }
+    }
+  });
+  render();
+}
+function getIndexValue() {
+  const index = document.querySelector("#changeRole").value;
+  return index.value;
+}

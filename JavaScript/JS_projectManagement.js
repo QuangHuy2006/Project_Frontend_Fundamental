@@ -1,25 +1,61 @@
 let currentPage = 1;
+
 let totalPerPage = 9;
+
 const pages = document.querySelector(".buttonPages");
+
 const previousButton = document.querySelector(".previous");
+
 const continueButton = document.querySelector(".continue");
+
 const addProjectWindow = document.querySelector(".add-window");
+
 const projectName = document.querySelector("#projectName");
+
 const projectNameError = document.querySelector("#error");
+
 const projectDecribe = document.querySelector("#projectDecribe");
+
 const projectDecribeError = document.querySelector("#error2");
+
 const table = document.querySelector("#table tbody");
+
 const background = document.querySelector(".overlay");
+
+const addWindow = document.querySelector(".add-window");
+
 let projectLocals = JSON.parse(localStorage.getItem("projects")) || {};
+
 const buttonAddWindow = document.querySelector(".addedProjectButton");
+
 const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
+
 const saveBtn = document.querySelector("#save");
+
 const projectNameInput2 = document.querySelector(".projectNameInput");
+
 const currentUser = localStorage.getItem("user");
+
 projectLocals[currentUser] = projectLocals[currentUser] || [];
+
 const userInfor = JSON.parse(localStorage.getItem("userInfor")) || [];
+
+let usedProject = [];
+
+function checkValidProjectName() {
+  projectLocals[currentUser].forEach((value, index) => {
+    if (value.projectName != usedProject[index]) {
+      usedProject.push(value.projectName);
+    }
+  });
+}
+
+checkValidProjectName();
+
 function renderPages() {
-  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
+  const totalPages = Math.ceil(
+    projectLocals[currentUser].length / totalPerPage
+  );
   pages.textContent = "";
   for (let i = 1; i <= totalPages; i++) {
     const singlePages = document.createElement("button");
@@ -48,7 +84,9 @@ function renderPages() {
   }
 }
 continueButton.addEventListener("click", function (event) {
-  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
+  const totalPages = Math.ceil(
+    projectLocals[currentUser].length / totalPerPage
+  );
   event.preventDefault();
   if (currentPage < totalPages) {
     currentPage++;
@@ -57,7 +95,9 @@ continueButton.addEventListener("click", function (event) {
   }
 });
 previousButton.addEventListener("click", function (event) {
-  const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
+  const totalPages = Math.ceil(
+    projectLocals[currentUser].length / totalPerPage
+  );
   event.preventDefault();
   if (currentPage > 1) {
     currentPage--;
@@ -91,11 +131,11 @@ const navLinks = [
   },
   { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
 ];
-buttonAddWindow.addEventListener("click", function(event){
+buttonAddWindow.addEventListener("click", function (event) {
   event.preventDefault();
   addProjectWindow.style.display = "block";
   background.style.display = "block";
-})
+});
 function addUser() {
   let checkIfValueValid = 0;
   if (!projectName.value.trim()) {
@@ -122,39 +162,85 @@ function addUser() {
     const projectId = projectLocals[currentUser].length
       ? projectLocals[currentUser][projectLocals[currentUser].length - 1].id + 1
       : 1;
-    const project = {
-      id: projectId,
-      projectName: projectName.value.trim(),
-      projectDecribe: projectDecribe.value.trim(),
-      member: [
-        {
-          email: localStorage.getItem("user"),
-          name: userInfor[userInfor.findIndex(value => value.emailAddress === localStorage.getItem("user"))].username,
-          role: "Project owner",
-        },
-      ],
-    };
-    if (!projectLocals[currentUser]) {
-      projectLocals[currentUser] = [];
+    if (usedProject.length) {
+      if (usedProject.some((value) => value === projectName.value.trim())) {
+        projectNameError.textContent = "Tên dự án không được trùng nhau";
+        projectName.style.borderColor = "red";
+        projectNameError.style.color = "red";
+      } else {
+        const project = {
+          id: projectId,
+          projectName: projectName.value.trim(),
+          projectDecribe: projectDecribe.value.trim(),
+          member: [
+            {
+              email: localStorage.getItem("user"),
+              name: userInfor[
+                userInfor.findIndex(
+                  (value) => value.emailAddress === localStorage.getItem("user")
+                )
+              ].username,
+              role: "Project owner",
+            },
+          ],
+        };
+        if (!projectLocals[currentUser]) {
+          projectLocals[currentUser] = [];
+        }
+        projectLocals[currentUser].push(project);
+        localStorage.setItem("projects", JSON.stringify(projectLocals));
+        render(projectLocals[currentUser]);
+        renderPages();
+        checkValidProjectName();
+        addProjectWindow.style.display = "none";
+        background.style.display = "none";
+        projectDecribe.value = "";
+        projectName.value = "";
+        projectName.style.borderColor = "lightgray";
+        projectNameError.style.color = "black";
+      }
+    } else {
+      const project = {
+        id: projectId,
+        projectName: projectName.value.trim(),
+        projectDecribe: projectDecribe.value.trim(),
+        member: [
+          {
+            email: localStorage.getItem("user"),
+            name: userInfor[
+              userInfor.findIndex(
+                (value) => value.emailAddress === localStorage.getItem("user")
+              )
+            ].username,
+            role: "Project owner",
+          },
+        ],
+      };
+      if (!projectLocals[currentUser]) {
+        projectLocals[currentUser] = [];
+      }
+      projectLocals[currentUser].push(project);
+      localStorage.setItem("projects", JSON.stringify(projectLocals));
+      render(projectLocals[currentUser]);
+      renderPages();
+      checkValidProjectName();
+      addProjectWindow.style.display = "none";
+      background.style.display = "none";
+      projectDecribe.value = "";
+      projectName.value = "";
+      projectName.style.borderColor = "lightgray";
+      projectNameError.style.color = "black";
     }
-    projectLocals[currentUser].push(project);
-    localStorage.setItem("projects", JSON.stringify(projectLocals));
-    render(projectLocals[currentUser]);
-    renderPages();
-    addProjectWindow.style.display = "none";
-    background.style.display = "none";
-    projectDecribe.value = "";
-    projectName.value = "";
   }
 }
-if(projectLocals[currentUser].length){
+if (projectLocals[currentUser].length) {
   render(projectLocals[currentUser]);
   renderPages();
 }
 function render(userInput) {
   const getFirstElementEachPage = (currentPage - 1) * totalPerPage;
   const getLastElementEachPage = totalPerPage * currentPage;
-  const user = userInput.slice(getFirstElementEachPage, getLastElementEachPage)
+  const user = userInput.slice(getFirstElementEachPage, getLastElementEachPage);
   table.textContent = "";
   user.forEach((value, index) => {
     const row = document.createElement("tr");
@@ -171,9 +257,12 @@ function render(userInput) {
         `;
     row.querySelector(".fix").addEventListener("click", function (event) {
       event.preventDefault();
+      const previousValue = user[index].projectName;
       user[index].projectName = prompt("Nhập tên dự án mới");
       localStorage.setItem("projects", JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);
+      usedProject[usedProject.findIndex(value => value == previousValue)] = user[index].projectName;
+      checkValidProjectName();
     });
     row.querySelector(".delete").addEventListener("click", function (event) {
       event.preventDefault();
@@ -182,8 +271,12 @@ function render(userInput) {
       deletedId = index;
     });
     saveBtn.onclick = function () {
-      const totalPages = Math.ceil(projectLocals[currentUser].length / totalPerPage);
+      const totalPages = Math.ceil(
+        projectLocals[currentUser].length / totalPerPage
+      );
       const realIndex = (currentPage - 1) * totalPerPage + deletedId;
+      usedProject.splice(usedProject.findIndex(value => value === projectLocals[currentUser][realIndex].projectName),1);
+      checkValidProjectName();
       projectLocals[currentUser].splice(realIndex, 1);
       localStorage.setItem(`projects`, JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);

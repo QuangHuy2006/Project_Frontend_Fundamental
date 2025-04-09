@@ -99,17 +99,12 @@ li {
   color: #9b9c9c;
 }
 
-.role {
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 100%;
-  letter-spacing: 0px;
-  vertical-align: middle;
-  border: 1px solid #d0d5dd;
-  width: 20vh;
-  display: inline-block;
-  text-align: left;
-  padding: 4px 0px;
+.hide{
+  display: none;
+}
+
+#roleInput{
+  border-radius: 0%;
 }
 
 .first-element {
@@ -504,7 +499,30 @@ table thead tr th {
   cursor: pointer;
 }
 
+.cancel {
+  border-radius: 8px;
+  border-width: 1px;
+  padding: 6.5px 13.5px;
+  background-color: #6c757d;
+  color: #ffffff;
+  box-shadow: 0px 1px 2px 0px #1018280d;
+  cursor: pointer;
+}
+
 #save {
+  border-radius: 8px;
+  border-width: 1px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  background-color: #0d6efd;
+  padding: 6.5px 14.5px;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.save {
   border-radius: 8px;
   border-width: 1px;
   font-weight: 500;

@@ -35,8 +35,8 @@
           <span id="errorRole"></span>
         </div>
         <div class="window-footer">
-          <button id="cancel" onclick="closer()">Huỷ</button>
-          <button id="save" onclick="addUser()">Lưu</button>
+          <button class="cancel" onclick="closer()">Huỷ</button>
+          <button class="save" onclick="addUser()">Lưu</button>
         </div>
       </div>
       <div class="add-task-window">
@@ -90,8 +90,8 @@
           <span class="progressError"></span>
         </div>
         <div class="window-footer">
-          <button id="cancel" onclick="closer()">Huỷ</button>
-          <button id="save" onclick="addTask()">Lưu</button>
+          <button class="cancel" onclick="closer()">Huỷ</button>
+          <button class="save" onclick="addTask()">Lưu</button>
         </div>
       </div>
         <div class="userList">
@@ -112,8 +112,8 @@
               </table>
               </div>
               <div class="window-footer">
-                <button id="cancel" onclick="closer()">Đóng</button>
-                <button id="save" onclick="closer()">Lưu</button>
+                <button id="cancel">Đóng</button>
+                <button id="save">Lưu</button>
           </div>
       </div>
       <div class="header">
@@ -164,11 +164,12 @@
         <div class="third-element">
           <div><button id="added">+Thêm nhiệm vụ</button></div>
           <div class="filter">
-            <select >
+            <select onchange="sortByOption()">
               <option>Sắp xếp theo</option>
+              <option>Tên</option>
             </select>
             <div>
-              <input type="text" placeholder="Tìm kiếm nhiệm vụ">
+              <input type="text" placeholder="Tìm kiếm nhiệm vụ" id="findTask" onkeyup="findByName()">
             </div>
           </div>
         </div>
