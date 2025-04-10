@@ -60,6 +60,27 @@
           </button>
         </div>
       </div>
+      <div class="add-window2">
+        <div class="window-header">
+          <span id="add-window-header-text">Sửa thông tin dự án</span>
+          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-body">
+          <span id="text">Tên dự án</span>
+          <input
+            type="text"
+            id="changedName" />
+          <span id="changeNameError"></span>
+        </div>
+        <div class="window-footer">
+          <button id="cancel" onclick="closer()">Huỷ</button>
+          <button
+            id="save"
+            onclick="changeProjectName()">
+            Lưu
+          </button>
+        </div>
+      </div>
       <div class="header">
         <div class="header-left">
           <span>Quản Lý Dự Án</span>

@@ -42,8 +42,8 @@ signInButton.addEventListener("click", function (event) {
           localStorage.setItem("user", emailAddress.value);
           announce.style.color = "green";
           announce.textContent = "Đăng nhập thành công";
-          setTimeout(switchWeb, 600);
-          break;
+          window.location.replace("HTML_projectManagement.html");
+          localStorage.setItem("loggin", "true");
         } else {
           announce.style.color = "red";
           announce.textContent = "Email hoặc mật khẩu chưa chính xác";
@@ -52,7 +52,6 @@ signInButton.addEventListener("click", function (event) {
     }
   }
 });
-
-function switchWeb() {
-  window.location.replace(`HTML_projectManagement.html?${userNumber}`);
+if(localStorage.getItem("loggin")){
+  window.history.back();
 }

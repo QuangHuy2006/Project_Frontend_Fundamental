@@ -140,10 +140,10 @@ table button {
 }
 
 .rotated {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
-table td {
+.table td {
   align-self: start;
   padding: 12px;
 }

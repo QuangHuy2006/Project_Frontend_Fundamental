@@ -1,6 +1,12 @@
 let userLocals = JSON.parse(localStorage.getItem("projects")) || {};
 
+const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
+
+const indexForRender = window.location.href.split("?")[1] - 1;
+
 const currentUser = localStorage.getItem("user");
+
+taskLocal[currentUser] = taskLocal[currentUser] || [];
 
 const btn = document.querySelectorAll(".buttonSpinable");
 
@@ -34,7 +40,34 @@ const date = document.querySelector("#date");
 
 const dueDate = document.querySelector("#dueDate");
 
+const dateError = document.querySelector("#dateError");
+
+const dueDateError = document.querySelector("#dueDateError");
+
 const usedEmail = [];
+
+const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
+
+const confirmDeleteButton = document.querySelector(".confirmDeleteButton");
+
+const addWindow2 = document.querySelector(".add-window2");
+
+const usedTaskName = [];
+
+function checkValidTaskName() {
+  const status = ["todo", "inprogress", "done", "pending"];
+  status.forEach((statusValue) => {
+    [taskLocal[currentUser][indexForRender]].forEach((value, index) => {
+      value[statusValue].forEach((value2) => {
+        if (value2.name != usedTaskName[index]) {
+          usedTaskName.push(value2.name);
+        }
+      });
+    });
+  });
+  console.log(usedTaskName);
+}
+checkValidTaskName();
 
 function checkValidEmail() {
   userLocals[currentUser].forEach((value) => {
@@ -58,6 +91,8 @@ const emailError = document.querySelector("#errorEmail");
 
 const roleError = document.querySelector("#errorRole");
 
+const errorName = document.querySelector("#error");
+
 const brand = document.querySelector(".brand");
 
 const brandDescription = document.querySelector(".brand-description");
@@ -73,6 +108,10 @@ brand.textContent = `${
 const cancel = document.querySelector("#cancel");
 
 const save = document.querySelector("#save");
+
+const confirmChange = document.querySelector(".confirmChange");
+
+const changedName = document.querySelector("#changedName");
 
 for (let i = 0; i < btn.length; i++) {
   btn[i].addEventListener("click", function (event) {
@@ -163,10 +202,11 @@ function addUser() {
 const deleteIndex = [];
 const changeRoleInput = [];
 function renderUser(tableChoice) {
+  const array = [userLocals[currentUser][indexForRender]];
   deleteIndex.length = 0;
   changeRoleInput.length = 0;
   tableChoice.textContent = "";
-  userLocals[currentUser].forEach((value) => {
+  array.forEach((value) => {
     value.member.forEach((member, index) => {
       const row = document.createElement("tr");
       row.innerHTML = `<th>
@@ -242,10 +282,12 @@ function renderUser(tableChoice) {
     background.style.display = "none";
   });
 }
+
 renderUser(tableForUserList);
 function renderUserList() {
+  const array = [userLocals[currentUser][indexForRender]];
   userListRowForm.textContent = "";
-  userLocals[currentUser].forEach((value) => {
+  array.forEach((value) => {
     value.member.forEach((value) => {
       const li = document.createElement("li");
       li.classList.add("classForLiOnly");
@@ -267,11 +309,13 @@ function renderUserList() {
     });
   });
 }
+
 renderUserList();
 const assignee = document.querySelector("#assignee");
 function renderAssignee() {
+  const array = [userLocals[currentUser][indexForRender]];
   assignee.length = 1;
-  userLocals[currentUser].forEach((value) => {
+  array.forEach((value) => {
     value.member.forEach((value) => {
       const option = document.createElement("option");
       option.innerHTML = `${value.name}`;
@@ -279,11 +323,17 @@ function renderAssignee() {
     });
   });
 }
+
 renderAssignee();
+
 const progressError = document.querySelector(".progressError");
+
 const statusError = document.querySelector(".statusError");
+
 const priorityError = document.querySelector(".priorityError");
+
 const assigneeError = document.querySelector(".assigneeError");
+
 function getAssigneeValue() {
   if (
     document.querySelector("#assignee").value ==
@@ -299,6 +349,7 @@ function getAssigneeValue() {
     return document.querySelector("#assignee").value;
   }
 }
+
 function getPriorityValue() {
   if (
     document.querySelector("#priority").value ==
@@ -314,6 +365,7 @@ function getPriorityValue() {
     return document.querySelector("#priority").value;
   }
 }
+
 function getProgressValue() {
   if (
     document.querySelector("#progress").value ==
@@ -329,6 +381,7 @@ function getProgressValue() {
     return document.querySelector("#progress").value;
   }
 }
+
 function getStatusValue() {
   if (
     document.querySelector("#status").value ==
@@ -344,50 +397,143 @@ function getStatusValue() {
     return document.querySelector("#status").value;
   }
 }
-const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
-taskLocal[currentUser] = taskLocal[currentUser] || {
-  todo: [],
-  inprogress: [],
-  pending: [],
-  done: [],
-};
+
+let currentDate = new Date();
+currentDate = currentDate.toLocaleDateString().split(" ");
+const currentDay = currentDate[0].split("/")[1];
+const currentMonth = currentDate[0].split("/")[0];
+
 function addTask() {
+  let check = 0;
   const dateSplit = date.value.split("-");
+
   const monthDate = dateSplit[1];
+
   const dayDate = dateSplit[2];
+
   const dueDateSplit = dueDate.value.split("-");
+
   const dueMonthDate = dueDateSplit[1];
+
   const dueDayDate = dueDateSplit[2];
-  const taskAddByUser = {
-    name: taskName.value,
-    assignee: getAssigneeValue(),
-    status: getStatusValue(),
-    date: `${monthDate} - ${dayDate}`,
-    dueDate: `${dueMonthDate} - ${dueDayDate}`,
-    priority: getPriorityValue(),
-    progress: getProgressValue(),
-  };
-  const status = taskAddByUser.status.toLowerCase().replace(" ", "");
-  taskLocal[currentUser][status].push(taskAddByUser);
-  localStorage.setItem("userTask", JSON.stringify(taskLocal));
-  render();
+
+  if (!taskName.value.trim()) {
+    taskName.style.borderColor = "red";
+    errorName.style.color = "red";
+    errorName.textContent = "Tên dự án không được để trống!";
+  }
+  if (usedTaskName.length) {
+    if (taskName.value.length < 5) {
+      taskName.style.borderColor = "red";
+      errorName.style.color = "red";
+      errorName.textContent = "Tên dự án tối thiểu 6 kí tự!";
+    } else {
+      if (usedTaskName.some((value) => value == taskName.value.trim())) {
+        taskName.style.borderColor = "red";
+        errorName.style.color = "red";
+        errorName.textContent = "Tên dự án này đã tồn tại!";
+      } else {
+        taskName.style.borderColor = "lightgray";
+        errorName.style.color = "black";
+        errorName.textContent = "";
+        check++;
+      }
+    }
+  } else {
+    taskName.style.borderColor = "lightgray";
+    errorName.style.color = "black";
+    errorName.textContent = "";
+    check++;
+  }
+  if (date.value == date.defaultValue) {
+    dateError.textContent = "Vui lòng chọn ngày bắt đầu";
+    dateError.style.color = "red";
+    date.style.borderColor = "red";
+  } else {
+    if (monthDate > dueMonthDate || dayDate > dueDayDate) {
+      dateError.textContent = "Ngày bắt đầu không được lớn hơn ngày kết thúc";
+      dateError.style.color = "red";
+      date.style.borderColor = "red";
+    } else if (monthDate < currentDate && dayDate < currentDay) {
+      dateError.textContent = "Ngày bắt đầu phải lớn hơn ngày hiện tại";
+      dateError.style.color = "red";
+      date.style.borderColor = "red";
+    } else {
+      dateError.textContent = "";
+      dateError.style.color = "black";
+      date.style.borderColor = "lightgray";
+      check++;
+    }
+  }
+  if (dueDate.value == dueDate.defaultValue) {
+    dueDateError.textContent = "Vui lòng chọn ngày kết thúc";
+    dueDateError.style.color = "red";
+    dueDate.style.borderColor = "red";
+  } else {
+    dueDateError.textContent = "";
+    dueDateError.style.color = "black";
+    dueDate.style.borderColor = "lightgray";
+    check++;
+  }
+  if (check == 3) {
+    const taskAddByUser = {
+      name: taskName.value,
+      assignee: getAssigneeValue(),
+      status: getStatusValue(),
+      date: `${monthDate} - ${dayDate}`,
+      dueDate: `${dueMonthDate} - ${dueDayDate}`,
+      priority: getPriorityValue(),
+      progress: getProgressValue(),
+    };
+    const status = taskAddByUser.status.toLowerCase().replace(" ", "");
+    if (taskLocal[currentUser][indexForRender]) {
+      [taskLocal[currentUser][indexForRender]].forEach((value) => {
+        value[status].push(taskAddByUser);
+      });
+      localStorage.setItem("userTask", JSON.stringify(taskLocal));
+      render();
+    } else {
+      if (!taskLocal[currentUser]) {
+        taskLocal[currentUser] = [];
+      }
+      if (!taskLocal[currentUser][indexForRender]) {
+        taskLocal[currentUser][indexForRender] = {
+          todo: [],
+          inprogress: [],
+          pending: [],
+          done: [],
+        };
+      }
+      taskLocal[currentUser][indexForRender][status].push(taskAddByUser);
+      localStorage.setItem("userTask", JSON.stringify(taskLocal));
+      render();
+      checkValidTaskName();
+    }
+  }
 }
+
 const changeRole = document.querySelectorAll(".changeRole");
 const inprogress = document.querySelector("#in-progress");
 const done = document.querySelector("#done");
 const pending = document.querySelector("#pending");
 const todo = document.querySelector("#to-do");
+
+let indexToDelete = 0;
+let fixList = "";
+let deleteList = "";
 function render() {
   inprogress.textContent = "";
   done.textContent = "";
   pending.textContent = "";
   todo.textContent = "";
-  const status = ["todo", "done", "pending", "inprogress"];
+  const status = ["todo", "inprogress", "done", "pending"];
+  const array = [taskLocal[currentUser][indexForRender]];
   status.forEach((statusValue) => {
-    taskLocal[currentUser][statusValue].forEach((value, index) => {
-      const row = document.createElement("tr");
-      row.classList.add("alignRow");
-      row.innerHTML = `
+    array.forEach((value2) => {
+      value2[statusValue].forEach((value, index) => {
+        const row = document.createElement("tr");
+        row.classList.add("alignRow");
+        row.innerHTML = `
       <td><span class="taskName">${value.name}</span></td>
       <td>${value.assignee}</td>
       <td><span class="${
@@ -412,37 +558,61 @@ function render() {
             : ""
         }">${value.progress}</td>
           <td>
-          <button class="fix">Sửa</button>
-          <button class="delete">Xóa</button>
+          <button class="fix" data-value="${value.status
+            .toLowerCase()
+            .replace(" ", "")}">Sửa</button>
+          <button class="delete" data-value="${value.status
+            .toLowerCase()
+            .replace(" ", "")}">Xóa</button>
           </td>
           `;
-      row.querySelector(".fix").addEventListener("click", function (event) {
-        event.preventDefault();
-        taskLocal[currentUser][statusValue][index].name = prompt(
-          "Nhập tên mới cho nhiệm vụ"
-        );
-        localStorage.setItem("userTask", JSON.stringify(taskLocal));
-        render();
+        row.querySelector(".fix").addEventListener("click", function (event) {
+          fixList = this.getAttribute("data-value");
+          event.preventDefault();
+          addWindow2.style.display = "block";
+          background.style.display = "block";
+        });
+        row
+          .querySelector(".delete")
+          .addEventListener("click", function (event) {
+            deleteList = this.getAttribute("data-value");
+            event.preventDefault();
+            confirmDeleteWindow.style.display = "block";
+            background.style.display = "block";
+            indexToDelete = index;
+          });
+        if (value.status == "Done") {
+          done.appendChild(row);
+        } else if (value.status == "In progress") {
+          inprogress.appendChild(row);
+        } else if (value.status == "Pending") {
+          pending.appendChild(row);
+        } else if (value.status == "To do") {
+          todo.appendChild(row);
+        }
       });
-      row.querySelector(".delete").addEventListener("click", function (event) {
-        event.preventDefault();
-        taskLocal[currentUser][statusValue].splice(index, 1);
-        localStorage.setItem("userTask", JSON.stringify(taskLocal));
-        render();
-      });
-      if (value.status == "Done") {
-        done.appendChild(row);
-      }
-      if (value.status == "In progress") {
-        inprogress.appendChild(row);
-      }
-      if (value.status == "Pending") {
-        pending.appendChild(row);
-      }
-      if (value.status == "To do") {
-        todo.appendChild(row);
-      }
     });
+  });
+  confirmDeleteButton.addEventListener("click", function () {
+    usedTaskName.splice(usedTaskName.findIndex(value => value === taskLocal[currentUser][indexForRender][deleteList].name), 1);
+    taskLocal[currentUser][indexForRender][deleteList].splice(indexToDelete, 1);
+    localStorage.setItem("userTask", JSON.stringify(taskLocal));
+    render();
+    confirmDeleteWindow.style.display = "none";
+    background.style.display = "none";
+  });
+  confirmChange.addEventListener("click", function () {
+    if (!changedName.value.trim()) {
+    } else {
+      taskLocal[currentUser][indexForRender][fixList][index].name =
+        changedName.value.trim();
+    }
+    changedName.value = "";
+    localStorage.setItem("userTask", JSON.stringify(taskLocal));
+    render();
+    checkValidTaskName();
+    addWindow2.style.display = "none";
+    background.style.display = "none";
   });
   addTaskWindow.style.display = "none";
   background.style.display = "none";
@@ -458,12 +628,17 @@ function render() {
   date.value = date.defaultValue;
   dueDate.value = dueDate.defaultValue;
 }
-render();
+
+if (taskLocal[currentUser][indexForRender]) {
+  render();
+}
 function closer() {
   addTaskWindow.style.display = "none";
   addWindow.style.display = "none";
   background.style.display = "none";
   userList.style.display = "none";
+  confirmDeleteWindow.style.display = "none";
+  addWindow2.style.display = "none";
 }
 buttonAddUser.addEventListener("click", function (event) {
   event.preventDefault();
@@ -486,39 +661,47 @@ function findByName() {
   const status = ["todo", "done", "pending", "inprogress"];
   if (findTask.value.trim()) {
     status.forEach((statusValue) => {
-      previousObject[statusValue] = taskLocal[currentUser][statusValue];
+      previousObject[statusValue] =
+        taskLocal[currentUser][indexForRender][statusValue];
     });
     status.forEach((statusValue) => {
-      taskLocal[currentUser][statusValue] = taskLocal[currentUser][
-        statusValue
-      ].filter((value) => value.name.includes(findTask.value.trim()));
+      taskLocal[currentUser][indexForRender][statusValue] = taskLocal[
+        currentUser
+      ][indexForRender][statusValue].filter((value) =>
+        value.name.includes(findTask.value)
+      );
     });
+
     render();
   } else {
     status.forEach((statusValue) => {
-      taskLocal[currentUser][statusValue] = previousObject[statusValue];
+      taskLocal[currentUser][indexForRender][statusValue] =
+        previousObject[statusValue];
     });
     render();
   }
 }
-console.log(taskLocal[currentUser].todo);
 function sortByOption() {
   const status = ["todo", "done", "pending", "inprogress"];
   status.forEach((statusValue) => {
-    for (let i = 0; i < taskLocal[currentUser][statusValue].length; i++) {
+    for (
+      let i = 0;
+      i < taskLocal[currentUser][indexForRender][statusValue].length;
+      i++
+    ) {
       for (
         let j = 0;
-        j < taskLocal[currentUser][statusValue].length - 1 - i;
+        j < taskLocal[currentUser][indexForRender][statusValue].length - 1 - i;
         j++
       ) {
         if (
-          taskLocal[currentUser][statusValue][j].name >
-          taskLocal[currentUser][statusValue][j + 1].name
+          taskLocal[currentUser][indexForRender][statusValue][j].name >
+          taskLocal[currentUser][indexForRender][statusValue][j + 1].name
         ) {
-          let temp = taskLocal[currentUser][statusValue][j];
-          taskLocal[currentUser][statusValue][j] =
-            taskLocal[currentUser][statusValue][j + 1];
-          taskLocal[currentUser][statusValue][j + 1] = temp;
+          let temp = taskLocal[currentUser][indexForRender][statusValue][j];
+          taskLocal[currentUser][indexForRender][statusValue][j] =
+            taskLocal[currentUser][indexForRender][statusValue][j + 1];
+          taskLocal[currentUser][indexForRender][statusValue][j + 1] = temp;
         }
       }
     }
@@ -529,3 +712,11 @@ function getIndexValue() {
   const index = document.querySelector("#changeRole").value;
   return index.value;
 }
+
+if (!localStorage.getItem("loggin") || "") {
+  window.history.back();
+}
+const logOut = document.querySelector(".logOut");
+logOut.addEventListener("click", function () {
+  localStorage.removeItem("loggin");
+});

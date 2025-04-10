@@ -265,6 +265,21 @@ ul {
   z-index: 10;
 }
 
+.add-window2 {
+  border: 1px solid lightgray;
+  width: fit-content;
+  background-color: white;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  width: 20%;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 10;
+}
+
 .confirm-delete-window {
   border: 1px solid lightgray;
   width: fit-content;

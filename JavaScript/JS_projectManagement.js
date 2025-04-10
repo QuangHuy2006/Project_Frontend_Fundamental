@@ -6,6 +6,8 @@ const pages = document.querySelector(".buttonPages");
 
 const previousButton = document.querySelector(".previous");
 
+const addChangeWindow = document.querySelector(".add-window2");
+
 const continueButton = document.querySelector(".continue");
 
 const addProjectWindow = document.querySelector(".add-window");
@@ -40,6 +42,10 @@ projectLocals[currentUser] = projectLocals[currentUser] || [];
 
 const userInfor = JSON.parse(localStorage.getItem("userInfor")) || [];
 
+const changedName = document.querySelector("#changedName");
+
+const changedNameError = document.querySelector("#changeNameError");
+
 let usedProject = [];
 
 function checkValidProjectName() {
@@ -51,6 +57,12 @@ function checkValidProjectName() {
 }
 
 checkValidProjectName();
+
+function changeProjectName(){
+  addChangeWindow.style.display = "none";
+  background.style.display = "none";
+  changedName.value = "";
+}
 
 function renderPages() {
   const totalPages = Math.ceil(
@@ -109,7 +121,11 @@ function closer() {
   addWindow.style.display = "none";
   background.style.display = "none";
   confirmDeleteWindow.style.display = "none";
+  addChangeWindow.style.display = "none";
+  addProjectWindow.style.display = "none";
 }
+console.log(projectLocals[currentUser].projectName);
+
 function findByName() {
   const findName = projectLocals[currentUser].filter((value) =>
     value.projectName.includes(projectNameInput2.value.trim())
@@ -251,14 +267,20 @@ function render(userInput) {
             <div>
                 <button class="fix">Sửa</button>
                 <button class="delete">Xóa</button>
-                <button class="detail"><a href="../HTML/HTML_mission.html?${value.id}">Chi tiết</a></button>
+                <button class="detail"><a href="../HTML/HTML_mission.html?${index + 1}">Chi tiết</a></button>
             </div>
         </td>
         `;
     row.querySelector(".fix").addEventListener("click", function (event) {
       event.preventDefault();
       const previousValue = user[index].projectName;
-      user[index].projectName = prompt("Nhập tên dự án mới");
+      addChangeWindow.style.display = "block"
+      background.style.display = "block"
+      if(!changedName.value.trim()){
+        user[index].projectName = previousValue;
+      }else{
+        user[index].projectName = changedName.value.trim();
+      }
       localStorage.setItem("projects", JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);
       usedProject[usedProject.findIndex(value => value == previousValue)] = user[index].projectName;
@@ -276,7 +298,6 @@ function render(userInput) {
       );
       const realIndex = (currentPage - 1) * totalPerPage + deletedId;
       usedProject.splice(usedProject.findIndex(value => value === projectLocals[currentUser][realIndex].projectName),1);
-      checkValidProjectName();
       projectLocals[currentUser].splice(realIndex, 1);
       localStorage.setItem(`projects`, JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);
@@ -289,3 +310,10 @@ function render(userInput) {
     table.appendChild(row);
   });
 }
+if(!localStorage.getItem("loggin") || ""){
+  window.history.back();
+}
+const logOut = document.querySelector(".logOut");
+logOut.addEventListener("click", function(){
+  localStorage.removeItem("loggin");
+})

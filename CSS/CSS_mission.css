@@ -353,6 +353,21 @@ table thead tr th {
   z-index: 10;
 }
 
+.add-window2 {
+  border: 1px solid lightgray;
+  width: fit-content;
+  background-color: white;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  width: 20%;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 10;
+}
+
 .userList {
   border: 1px solid lightgray;
   width: fit-content;
@@ -520,6 +535,46 @@ table thead tr th {
   padding: 6.5px 14.5px;
   color: #ffffff;
   cursor: pointer;
+}
+
+.confirm-delete-window {
+  border: 1px solid lightgray;
+  width: fit-content;
+  background-color: white;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  width: 20%;
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 10;
+}
+
+.window-confirm-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+  background-color: #ffffff;
+}
+
+#add-window-header-text {
+  font-weight: 500;
+  font-size: 23.3px;
+  line-height: 30px;
+  letter-spacing: 0px;
+  padding: 15.5px 0px 17.5px 16px;
+}
+
+#add-window-header-button {
+  background-color: #ffffff;
+  font-size: 16px;
+  border: none;
+  color: #818181;
+  padding: 17px 22px 18px 0px;
 }
 
 .save {

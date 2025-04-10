@@ -118,7 +118,6 @@ signUpButton.addEventListener("click", function (event) {
     password.value = "";
     confirmPassword.value = "";
     showAlert();
-    
   }
 });
 function showAlert() {
@@ -130,4 +129,7 @@ function showAlert() {
   }).then(() =>{
     window.location.replace("HTML_SignIn.html");
   });
+}
+if(localStorage.getItem("loggin")){
+  window.history.back();
 }
