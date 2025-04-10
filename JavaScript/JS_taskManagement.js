@@ -17,7 +17,6 @@ filtered();
 const projectLocal = JSON.parse(localStorage.getItem("projects")) || [];
 const btn = document.querySelectorAll(".buttonSpinable");
 const tableContent = document.querySelectorAll(".table-content");
-console.log(btn);
 
 for (let i = 0; i < btn.length; i++) {
   btn[i].addEventListener("click", function (event) {
@@ -80,16 +79,57 @@ function renderTable() {
         >${value.projectName}</span
         >
       </td>
-      <tfoot class="table-content" id="${index}"></tfoot>
     `;
-    row.querySelector(".buttonSpinable").addEventListener("click", function(){
+    const tfoot = document.createElement("tfoot");
+    tfoot.classList.add("table-content");
+    tfoot.setAttribute("id", `table${index}`);
+    tfoot.innerHTML=``;
+    row.querySelector(".buttonSpinable").addEventListener("click", function () {
       this.classList.toggle("rotated");
-      console.log(tableContent);
-      
-      // row.querySelector(".table-content").classList.toggle("active");
+      row.querySelector(".table-content").classList.toggle("active");
     });
     table.appendChild(row);
+    table.appendChild(tfoot);
   });
 }
 renderTable();
-console.log(projectLocal[currentUser]);
+
+function renderEachProject() {
+  const status = ["todo", "inprogress", "done", "pending"];
+  status.forEach((statusValue) => {
+    for (let i = 0; i < taskLocal[currentUser].length; i++) {
+      console.log(taskLocal[currentUser][i][statusValue]);
+      [taskLocal[currentUser][i]].forEach((value) => {
+        value[statusValue].forEach((value2) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+          <td><span class="taskName">${value2.name}</span></td>
+          <td><span class="${
+            value2.priority == "Trung bình"
+              ? "priorityAverage"
+              : value2.priority == "Cao"
+              ? "priorityHigh"
+              : value2.priority == "Thấp"
+              ? "priorityLow"
+              : ""
+          }">${value2.priority}</span></td>
+          <td>${value2.status}</td>
+          <td class="date">${value2.date}</td>
+          <td class="dueDate">${value2.dueDate}</td>
+          <td><span class="${
+            value2.progress == "Đúng tiến độ"
+              ? "onProgress"
+              : value2.progress == "Có rủi ro"
+              ? "progressRisky"
+              : value2.progress == "Trễ hạn"
+              ? "unProgressive"
+              : ""
+          }">${value2.progress}</span></td>
+          `;
+          document.querySelector(`#table${i}`).appendChild(row);
+        });
+      });
+    }
+  });
+}
+renderEachProject();

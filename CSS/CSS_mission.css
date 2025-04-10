@@ -234,7 +234,6 @@ li {
 }
 
 .table {
-  margin-top: 18.2px;
   border: 1px solid whitesmoke;
   width: 68%;
   border-radius: 6px;
@@ -244,6 +243,7 @@ li {
 }
 
 table {
+  margin-top: 11.2px;
   width: 100%;
   border-collapse: collapse;
   border: 1px;

@@ -65,9 +65,11 @@ function checkValidTaskName() {
       });
     });
   });
-  console.log(usedTaskName);
 }
-checkValidTaskName();
+
+if(taskLocal[currentUser][indexForRender]){
+  checkValidTaskName();
+}
 
 function checkValidEmail() {
   userLocals[currentUser].forEach((value) => {
@@ -440,10 +442,16 @@ function addTask() {
       }
     }
   } else {
-    taskName.style.borderColor = "lightgray";
-    errorName.style.color = "black";
-    errorName.textContent = "";
-    check++;
+    if (taskName.value.length < 5) {
+      taskName.style.borderColor = "red";
+      errorName.style.color = "red";
+      errorName.textContent = "Tên dự án tối thiểu 6 kí tự!";
+    }else{
+      taskName.style.borderColor = "lightgray";
+      errorName.style.color = "black";
+      errorName.textContent = "";
+      check++;
+    }
   }
   if (date.value == date.defaultValue) {
     dateError.textContent = "Vui lòng chọn ngày bắt đầu";
@@ -556,7 +564,7 @@ function render() {
             : value.progress == "Trễ hạn"
             ? "unProgressive"
             : ""
-        }">${value.progress}</td>
+        }">${value.progress}</span></td>
           <td>
           <button class="fix" data-value="${value.status
             .toLowerCase()

@@ -32,6 +32,21 @@ a {
   transition: color 0.2s linear;
 }
 
+.date {
+  text-align: center;
+  color: #0d6efd;
+}
+
+.dueDate {
+  text-align: center;
+  color: #0d6efd;
+}
+
+.taskName{
+  display: block;
+  text-align: start;
+  width: 50%;
+}
 .task {
   color: rgba(255, 255, 255, 0.55);
 }
@@ -131,6 +146,7 @@ table {
   border-collapse: collapse;
   border: 1px;
   table-layout: fixed;
+  margin-top: 11.2px;
 }
 
 table button {
@@ -152,12 +168,16 @@ table thead tr th {
   padding: 12px;
 }
 
+.table tbody{
+  width: 100%;
+}
+
 .table-content.active {
   display: table-row-group;
 }
 
 .table-content {
-  display: none;
+  display: table-row-group;
 }
 
 .fix {
@@ -374,4 +394,57 @@ table thead {
   margin-top: 20px;
   width: 100%;
   padding: 12px;
+}
+.priorityAverage {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #FFA500;
+  width: fit-content;
+}
+
+.priorityHigh {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #DC3545;
+  width: fit-content;
+}
+
+.priorityLow {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #0dcaf0;
+  width: fit-content;
+}
+
+.onProgress {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #198754;
+  width: fit-content;
+}
+
+.progressRisky {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #FFA500;
+  width: fit-content;
+}
+
+.unProgressive {
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid transparent;
+  color: #ffffff;
+  background-color: #DC3545;
+  width: fit-content;
 }
