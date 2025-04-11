@@ -117,6 +117,63 @@
           <button class="save" onclick="addTask()">Lưu</button>
         </div>
       </div>
+      <div class="fix-task-window">
+        <div class="window-header">
+          <span id="add-window-header-text">Thêm/sửa nhiệm vụ</span>
+          <span><button id="add-task-window-header-button" onclick="closer()">X</button></span>
+        </div>
+        <div class="window-task-body">
+          <span id="text">Tên nhiệm vụ</span>
+          <input
+            type="text"
+            id="fixTaskName" />
+          <span id="error"></span>
+          <span id="text">Người phụ trách</span>
+          <select id="assignee" onchange="getAssigneeValue()">
+            <option>Chọn người phụ trách</option>
+          </select>
+          <span class="assigneeError"></span>
+          <span>Trạng thái</span>
+          <select id="status" onchange="getStatusValue()">
+            <option>Chọn trạng thái nhiệm vụ</option>
+            <option>To do</option>
+            <option>In progress</option>
+            <option>Pending</option>
+            <option>Done</option>
+          </select>
+          <span class="statusError"></span>
+          <span>Ngày bắt đầu</span>
+          <input
+            type="date"
+            id="date" />
+          <span id="dateError"></span>
+          <span>Hạn cuối</span>
+          <input
+            type="date"
+            id="dueDate" />
+          <span id="dueDateError"></span>
+          <span>Độ ưu tiên</span>
+          <select id="priority" onchange="getPriorityValue()">
+            <option>Chọn độ ưu tiên</option>
+            <option style="color: aqua">Thấp</option>
+            <option style="color: orange">Trung bình</option>
+            <option style="color: red">Cao</option>
+          </select>
+          <span class="priorityError"></span>
+          <span>Tiến độ</span>
+          <select id="progress" onchange="getProgressValue()">
+            <option>Chọn tiến độ nhiệm vụ</option>
+            <option style="color: green">Đúng tiến độ</option>
+            <option style="color: orange">Có rủi ro</option>
+            <option style="color: red">Trễ hạn</option>
+          </select>
+          <span class="progressError"></span>
+        </div>
+        <div class="window-footer">
+          <button class="cancel" onclick="closer()">Huỷ</button>
+          <button class="save" onclick="addTask()">Lưu</button>
+        </div>
+      </div>
         <div class="userList">
           <div class="window-header">
             <span id="add-window-header-text">Thành viên</span>

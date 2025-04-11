@@ -1,5 +1,7 @@
 const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
 const currentUser = localStorage.getItem("user");
+const findValue = document.querySelector("#findValue");
+const findName = [];
 taskLocal[currentUser] = taskLocal[currentUser] || [];
 const stored = {};
 stored[currentUser] = stored[currentUser] || [];
@@ -58,7 +60,7 @@ logOut.addEventListener("click", function () {
 const table = document.querySelector(".table tbody");
 
 function renderTable() {
-  table.length = 1;
+  table.textContent = "";
   projectLocal[currentUser].forEach((value, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -80,7 +82,7 @@ function renderTable() {
         >
       </td>
     `;
-    const tfoot = document.createElement("tr");
+    const tfoot = document.createElement("div");
     tfoot.classList.add("table-content");
     tfoot.setAttribute("id", `table${index}`);
     tfoot.innerHTML = ``;
@@ -89,20 +91,21 @@ function renderTable() {
       row.querySelector(".table-content").classList.toggle("active");
     });
     table.appendChild(row);
-    // table.appendChild(tfoot);
+    table.appendChild(tfoot);
   });
 }
 renderTable();
-
+let number = 0;
 function renderEachProject() {
   const status = ["todo", "inprogress", "done", "pending"];
   for (let i = 0; i < taskLocal[currentUser].length; i++) {
-  document.querySelector(`#table${i}`).textContent = "";
+    document.querySelector(`#table${i}`).textContent = "";
   }
   status.forEach((statusValue) => {
     for (let i = 0; i < taskLocal[currentUser].length; i++) {
       [taskLocal[currentUser][i]].forEach((value) => {
         value[statusValue].forEach((value2) => {
+          number++;
           const row = document.createElement("tr");
           row.innerHTML = `
           <td><span class="taskName">${value2.name}</span></td>
@@ -135,25 +138,55 @@ function renderEachProject() {
   });
 }
 renderEachProject();
-const findValue = document.querySelector("#findValue");
-const findName = [];
+console.log(number);
+console.log(taskLocal[currentUser]);
+
 function sortByOption() {
-  if (document.querySelector(".select") == "Hạn chót") {
+  const status = ["todo", "inprogress", "done", "pending"];
+  if (document.querySelector(".select").value == "Hạn chót") {
+    status.forEach((statusValue) => {
+      taskLocal[currentUser].forEach((value) => {
+        value[statusValue].forEach((value2) => {
+          for (let i = 0; i < number; i++) {
+            for (let j = 0; j < number - i - 1; j++) {
+              console.log(value2.dueDate.replace(" ", "").split("-")[1]);
+              if (value2.dueDate.replace(" ", "").split("-")[1][j] > value2.dueDate.replace(" ", "").split("-")[1][j + 1]) {
+                let temp = value2[j];
+                value2[j] = value2[j + 1];
+                value2[j + 1] = temp;
+              }
+            }
+          }
+        });
+      });
+    });
   } else if (document.querySelector(".select") == "Độ ưu tiên") {
   }
 }
 function findByName() {
   const status = ["todo", "inprogress", "done", "pending"];
-  status.forEach((statusValue) => {
-    taskLocal[currentUser].forEach((value) => {
-      findName.push(
-        value[statusValue].filter((value2) =>
-          value2.name.includes(findValue.value.trim())
-        )
-      );
-      renderEachProject(findName);
-      console.log(findName);
-      
+  let previousObject = [];
+  if (findValue.value) {
+    status.forEach((statusValue) => {
+      taskLocal[currentUser].forEach((value) => {
+        previousObject = value[statusValue];
+        console.log(previousObject);
+      });
     });
-  });
+    status.forEach((statusValue) => {
+      taskLocal[currentUser].forEach((value) => {
+        value[statusValue] = value[statusValue].filter((value2) =>
+          value2.name.includes(findValue.value.trim())
+        );
+        renderEachProject();
+      });
+    });
+    status.forEach((statusValue) => {
+      taskLocal[currentUser].forEach((value) => {
+        value[statusValue] = previousObject;
+      });
+    });
+  } else {
+    renderEachProject();
+  }
 }

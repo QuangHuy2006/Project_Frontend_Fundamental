@@ -403,6 +403,21 @@ table thead tr th {
   z-index: 10;
 }
 
+.fix-task-window {
+  border: 1px solid lightgray;
+  width: fit-content;
+  background-color: white;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  width: 20%;
+  position: fixed;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+  z-index: 10;
+}
+
 #add-window-header-text {
   font-weight: 500;
   font-size: 23.3px;
