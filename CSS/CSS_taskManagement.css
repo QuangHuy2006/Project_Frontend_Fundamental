@@ -148,6 +148,7 @@ table {
   table-layout: fixed;
   margin-top: 11.2px;
   white-space: nowrap;
+  margin-bottom: -13px;
 }
 
 table button {
@@ -165,7 +166,7 @@ table button {
   padding: 12px;
 }
 
-table thead tr th {
+table thead tr th,td {
   padding: 12px;
 }
 
@@ -175,7 +176,7 @@ table thead tr th {
 }
 
 .table-content {
-  display: table-row-group;
+  display: none;
 }
 
 .fix {
@@ -246,12 +247,9 @@ table thead tr th {
   height: 15px;
 }
 
-.firstRow {
-  width: 38%;
-}
 
-.lastRow {
-  width: 15%;
+.sixthRow{
+  text-align: center;
 }
 
 table thead {

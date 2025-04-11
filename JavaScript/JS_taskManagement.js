@@ -39,17 +39,6 @@ function closer() {
   confirmWindow.style.display = "none";
   background.style.display = "none";
 }
-save.addEventListener("click", function (event) {
-  event.preventDefault();
-  if (input.value.trim()) {
-    confirmWindowInput.style.display = "none";
-    confirmWindow.style.display = "block";
-  } else {
-    error.textContent = "Nội dung sửa đổi không được để trống";
-    input.value = "";
-    input.style.borderColor = "red";
-  }
-});
 save2.addEventListener("click", function (event) {
   event.preventDefault();
 });
@@ -57,14 +46,12 @@ const logOut = document.querySelector(".logOut");
 logOut.addEventListener("click", function () {
   localStorage.removeItem("loggin");
 });
-const table = document.querySelector(".table");
-
+const table = document.querySelector(".table2");
 function renderTable() {
-  table.length = 1;
-    projectLocal[currentUser].forEach((value, index) => {
-      const row = document.createElement("tbody");
-      row.innerHTML = `
-    <tr>
+  table.textContent = "";
+  projectLocal[currentUser].forEach((value, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
     <td colspan="6">
     <button class="buttonSpinable">
     <img
@@ -82,24 +69,24 @@ function renderTable() {
     >${value.projectName}</span
     >
     </td>
-    </tr>
     `;
-      const tfoot = document.createElement("tbody");
-      tfoot.classList.add("table-content");
-      tfoot.setAttribute("id", `table${index}`);
-      tfoot.innerHTML = ``;
-      row
-        .querySelector(".buttonSpinable")
-        .addEventListener("click", function () {
-          this.classList.toggle("rotated");
-          row.querySelector(".table-content").classList.toggle("active");
-        });
-      table.appendChild(row);
-      table.appendChild(tfoot);
+    const tfoot = document.createElement("tbody");
+    tfoot.classList.add("table-content");
+    tfoot.setAttribute("id", `table${index}`);
+    tfoot.innerHTML = ``;
+    row.querySelector(".buttonSpinable").addEventListener("click", function () {
+      this.classList.toggle("rotated");
+      tfoot.classList.toggle("active");
     });
+    table.appendChild(row);
+    table.appendChild(tfoot);
+  });
 }
+const confirmChangeButton = document.querySelector(".confirm-change");
+let indexToChange = 0;
+let changeList = "";
+let listIndex = 0;
 renderTable();
-let number = 0;
 function renderEachProject() {
   const status = ["todo", "inprogress", "done", "pending"];
   for (let i = 0; i < taskLocal[currentUser].length; i++) {
@@ -108,12 +95,11 @@ function renderEachProject() {
   status.forEach((statusValue) => {
     for (let i = 0; i < taskLocal[currentUser].length; i++) {
       [taskLocal[currentUser][i]].forEach((value) => {
-        value[statusValue].forEach((value2) => {
-          number++;
+        value[statusValue].forEach((value2, index) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-          <td><span class="taskName">${value2.name}</span></td>
-          <td><span class="${
+          <td class="firstRow"><span class="taskName">${value2.name}</span></td>
+          <td class="secondRow"><span class="${
             value2.priority == "Trung bình"
               ? "priorityAverage"
               : value2.priority == "Cao"
@@ -122,10 +108,15 @@ function renderEachProject() {
               ? "priorityLow"
               : ""
           }">${value2.priority}</span></td>
-          <td>${value2.status}</td>
-          <td class="date">${value2.date}</td>
-          <td class="dueDate">${value2.dueDate}</td>
-          <td><span class="${
+          <td class="secondThird">${
+            value2.status
+          } <button class="revise" data-value="${
+            value2.status
+          }" 
+          data-id="${i}"><img src=../Icon/revise.png width="15px" height="15px"></button></td>
+          <td class="date" class="fourthRow">${value2.date}</td>
+          <td class="dueDate" class="firthRow">${value2.dueDate}</td>
+          <td class="sixthRow"><span class="${
             value2.progress == "Đúng tiến độ"
               ? "onProgress"
               : value2.progress == "Có rủi ro"
@@ -135,51 +126,78 @@ function renderEachProject() {
               : ""
           }">${value2.progress}</span></td>
           `;
+          row.querySelector(".revise").addEventListener("click", function (e) {
+            e.preventDefault();
+            confirmWindowInput.style.display = "block";
+            background.style.display = "block";
+            changeList = this.getAttribute("data-value")
+              .toLowerCase()
+              .replace(" ", "");
+            indexToChange = index;
+            listIndex = this.getAttribute("data-id");
+          });
           document.querySelector(`#table${i}`).appendChild(row);
         });
       });
     }
+    confirmChangeButton.addEventListener("click", function () {
+      if (!input.value.trim()) {
+        error.textContent = "Tên Trạng thái mới không được để trống";
+        error.style.color = "red";
+        input.style.borderColor = "red";
+      } else {
+        confirmWindow.style.display = "block";
+        confirmWindowInput.style.display = "none";
+      }
+    });
+    document
+      .querySelector(".confirm-change-button")
+      .addEventListener("click", function () {
+        taskLocal[currentUser][listIndex][changeList][indexToChange].status =
+          input.value.trim();
+        renderEachProject();
+        localStorage.setItem("userTask", JSON.stringify(taskLocal));
+        confirmWindow.style.display = "none";
+        background.style.display = "none";
+      });
   });
 }
 renderEachProject();
-console.log(number);
-console.log(taskLocal[currentUser]);
 
 function sortByOption() {
   const status = ["todo", "inprogress", "done", "pending"];
   if (document.querySelector(".select").value == "Hạn chót") {
     status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((value) => {
-        value[statusValue].forEach((value2) => {
-          for (let i = 0; i < number; i++) {
-            for (let j = 0; j < number - i - 1; j++) {
-              console.log(value2.dueDate.replace(" ", "").split("-")[1]);
-              if (
-                value2.dueDate.replace(" ", "").split("-")[1][j] >
-                value2.dueDate.replace(" ", "").split("-")[1][j + 1]
-              ) {
-                let temp = value2[j];
-                value2[j] = value2[j + 1];
-                value2[j + 1] = temp;
-              }
-            }
-          }
-        });
+      taskLocal[currentUser].forEach((project) => {
+        project[statusValue].sort(
+          (a, b) => b.dueDate.split("-")[1] - a.dueDate.split("-")[1]
+        );
+        renderEachProject();
       });
     });
-  } else if (document.querySelector(".select") == "Độ ưu tiên") {
+  } else if (document.querySelector(".select").value == "Độ ưu tiên") {
+    const priorityOrder = {
+      Cao: 1,
+      "Trung bình": 2,
+      Thấp: 3,
+    };
+    status.forEach((statusValue) => {
+      taskLocal[currentUser].forEach((project) => {
+        project[statusValue].sort(
+          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
+        );
+        renderEachProject();
+      });
+    });
   }
 }
+let previousObject = "";
 function findByName() {
   const status = ["todo", "inprogress", "done", "pending"];
-  let previousObject = [];
+  if (!previousObject) {
+    previousObject = JSON.parse(JSON.stringify(taskLocal[currentUser]));
+  }
   if (findValue.value) {
-    status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((value) => {
-        previousObject = value[statusValue];
-        console.log(previousObject);
-      });
-    });
     status.forEach((statusValue) => {
       taskLocal[currentUser].forEach((value) => {
         value[statusValue] = value[statusValue].filter((value2) =>
@@ -188,12 +206,12 @@ function findByName() {
         renderEachProject();
       });
     });
-    status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((value) => {
-        value[statusValue] = previousObject;
-      });
-    });
   } else {
+    status.forEach((statusValue) => {
+      if (previousObject) {
+        taskLocal[currentUser] = JSON.parse(JSON.stringify(previousObject));
+      }
+    });
     renderEachProject();
   }
 }

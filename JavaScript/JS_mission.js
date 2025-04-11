@@ -40,6 +40,10 @@ const date = document.querySelector("#date");
 
 const dueDate = document.querySelector("#dueDate");
 
+const date2 = document.querySelector("#date2");
+
+const dueDate2 = document.querySelector("#dueDate2");
+
 const dateError = document.querySelector("#dateError");
 
 const dueDateError = document.querySelector("#dueDateError");
@@ -54,6 +58,15 @@ const addWindow2 = document.querySelector(".add-window2");
 
 const usedTaskName = [];
 
+const fixTaskWindow = document.querySelector(".fix-task-window");
+
+const fixTaskName = document.querySelector("#fixTaskName");
+
+const priorityOrder = {
+  Cao: 1,
+  "Trung bình": 2,
+  Thấp: 3,
+};
 function checkValidTaskName() {
   const status = ["todo", "inprogress", "done", "pending"];
   status.forEach((statusValue) => {
@@ -67,7 +80,7 @@ function checkValidTaskName() {
   });
 }
 
-if(taskLocal[currentUser][indexForRender]){
+if (taskLocal[currentUser][indexForRender]) {
   checkValidTaskName();
 }
 
@@ -326,6 +339,20 @@ function renderAssignee() {
   });
 }
 
+const assignee2 = document.querySelector("#assignee2");
+function renderAssignee2() {
+  const array = [userLocals[currentUser][indexForRender]];
+  assignee2.length = 1;
+  array.forEach((value) => {
+    value.member.forEach((value) => {
+      const option = document.createElement("option");
+      option.innerHTML = `${value.name}`;
+      assignee2.appendChild(option);
+    });
+  });
+}
+
+renderAssignee2();
 renderAssignee();
 
 const progressError = document.querySelector(".progressError");
@@ -352,6 +379,10 @@ function getAssigneeValue() {
   }
 }
 
+function getAssigneeValue2() {
+  return document.querySelector("#assignee2").value;
+}
+
 function getPriorityValue() {
   if (
     document.querySelector("#priority").value ==
@@ -366,6 +397,10 @@ function getPriorityValue() {
     document.querySelector("#priority").style.borderColor = "lightgray";
     return document.querySelector("#priority").value;
   }
+}
+
+function getPriorityValue2() {
+  return document.querySelector("#priority2").value;
 }
 
 function getProgressValue() {
@@ -384,6 +419,10 @@ function getProgressValue() {
   }
 }
 
+function getProgressValue2() {
+  return document.querySelector("#progress2").value;
+}
+
 function getStatusValue() {
   if (
     document.querySelector("#status").value ==
@@ -400,11 +439,16 @@ function getStatusValue() {
   }
 }
 
+function getStatusValue2() {
+  return document.querySelector("#status2").value;
+}
+
 let currentDate = new Date();
 currentDate = currentDate.toLocaleDateString().split(" ");
 const currentDay = currentDate[0].split("/")[1];
 const currentMonth = currentDate[0].split("/")[0];
 
+const accept = document.querySelector("#accept");
 function addTask() {
   let check = 0;
   const dateSplit = date.value.split("-");
@@ -446,7 +490,7 @@ function addTask() {
       taskName.style.borderColor = "red";
       errorName.style.color = "red";
       errorName.textContent = "Tên dự án tối thiểu 6 kí tự!";
-    }else{
+    } else {
       taskName.style.borderColor = "lightgray";
       errorName.style.color = "black";
       errorName.textContent = "";
@@ -529,6 +573,7 @@ const todo = document.querySelector("#to-do");
 let indexToDelete = 0;
 let fixList = "";
 let deleteList = "";
+let indexToChange = 0;
 function render() {
   inprogress.textContent = "";
   done.textContent = "";
@@ -577,8 +622,9 @@ function render() {
         row.querySelector(".fix").addEventListener("click", function (event) {
           fixList = this.getAttribute("data-value");
           event.preventDefault();
-          addWindow2.style.display = "block";
+          fixTaskWindow.style.display = "block";
           background.style.display = "block";
+          indexToChange = index;
         });
         row
           .querySelector(".delete")
@@ -602,25 +648,136 @@ function render() {
     });
   });
   confirmDeleteButton.addEventListener("click", function () {
-    usedTaskName.splice(usedTaskName.findIndex(value => value === taskLocal[currentUser][indexForRender][deleteList].name), 1);
+    usedTaskName.splice(
+      usedTaskName.findIndex(
+        (value) =>
+          value === taskLocal[currentUser][indexForRender][deleteList].name
+      ),
+      1
+    );
     taskLocal[currentUser][indexForRender][deleteList].splice(indexToDelete, 1);
     localStorage.setItem("userTask", JSON.stringify(taskLocal));
     render();
     confirmDeleteWindow.style.display = "none";
     background.style.display = "none";
   });
-  confirmChange.addEventListener("click", function () {
-    if (!changedName.value.trim()) {
+  accept.addEventListener("click", function () {
+    let check = 0;
+    const dateSplit = date2.value.split("-");
+
+    const monthDate = dateSplit[1];
+
+    const dayDate = dateSplit[2];
+
+    const dueDateSplit = dueDate2.value.split("-");
+
+    const dueMonthDate = dueDateSplit[1];
+
+    const dueDayDate = dueDateSplit[2];
+
+    if (fixTaskName.value.trim()) {
+      if (usedTaskName.length) {
+        if (fixTaskName.value.length < 5) {
+          fixTaskName.style.borderColor = "red";
+          errorName.style.color = "red";
+          errorName.textContent = "Tên dự án tối thiểu 6 kí tự!";
+        } else {
+          if (usedTaskName.some((value) => value == fixTaskName.value.trim())) {
+            fixTaskNametaskName.style.borderColor = "red";
+            errorName.style.color = "red";
+            errorName.textContent = "Tên dự án này đã tồn tại!";
+          } else {
+            fixTaskName.style.borderColor = "lightgray";
+            errorName.style.color = "black";
+            errorName.textContent = "";
+            check++;
+          }
+        }
+      }
     } else {
-      taskLocal[currentUser][indexForRender][fixList][index].name =
-        changedName.value.trim();
+      check++;
     }
-    changedName.value = "";
-    localStorage.setItem("userTask", JSON.stringify(taskLocal));
-    render();
-    checkValidTaskName();
-    addWindow2.style.display = "none";
-    background.style.display = "none";
+    if (date.value != date.defaultValue) {
+      if (monthDate > dueMonthDate || dayDate > dueDayDate) {
+        dateError.textContent = "Ngày bắt đầu không được lớn hơn ngày kết thúc";
+        dateError.style.color = "red";
+        date.style.borderColor = "red";
+      } else if (monthDate < currentDate && dayDate < currentDay) {
+        dateError.textContent = "Ngày bắt đầu phải lớn hơn ngày hiện tại";
+        dateError.style.color = "red";
+        date.style.borderColor = "red";
+      } else {
+        dateError.textContent = "";
+        dateError.style.color = "black";
+        date.style.borderColor = "lightgray";
+        check++;
+      }
+    } else {
+      check++;
+    }
+    if (dueDate.value != dueDate.defaultValue) {
+      dueDateError.textContent = "";
+      dueDateError.style.color = "black";
+      dueDate.style.borderColor = "lightgray";
+      check++;
+    } else {
+      check++;
+    }
+    if (
+      document.querySelector("#status2").value !=
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].status
+    ) {
+      check++;
+    } else {
+      check++;
+    }
+    if (
+      document.querySelector("#progress2").value !=
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].progress
+    ) {
+      check++;
+    } else {
+      check++;
+    }
+    if (
+      document.querySelector("#priority2").value !=
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].priority
+    ) {
+      check++;
+    } else {
+      check++;
+    }
+    if (
+      document.querySelector("#assignee2").value !=
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].assignee
+    ) {
+      check++;
+    } else {
+      check++;
+    }
+    if (check == 7) {
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].name =
+        fixTaskName.value.trim();
+      taskLocal[currentUser][indexForRender][fixList][
+        indexToChange
+      ].date = `${monthDate} - ${dayDate}`;
+      taskLocal[currentUser][indexForRender][fixList][
+        indexToChange
+      ].dueDate = `${dueMonthDate} - ${dueDayDate}`;
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].assignee =
+        getAssigneeValue2();
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].progress =
+        getProgressValue2();
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].priority =
+        getPriorityValue2();
+      taskLocal[currentUser][indexForRender][fixList][indexToChange].status =
+        getStatusValue2();
+      localStorage.setItem("userTask", JSON.stringify(taskLocal));
+      render();
+      checkValidTaskName();
+      fixTaskWindow.style.display = "none";
+      background.style.display = "none";
+    }
   });
   addTaskWindow.style.display = "none";
   background.style.display = "none";
@@ -646,7 +803,7 @@ function closer() {
   background.style.display = "none";
   userList.style.display = "none";
   confirmDeleteWindow.style.display = "none";
-  addWindow2.style.display = "none";
+  fixTaskWindow.style.display = "none";
 }
 buttonAddUser.addEventListener("click", function (event) {
   event.preventDefault();
@@ -663,15 +820,14 @@ expandButton.addEventListener("click", function (event) {
   userList.style.display = "block";
   background.style.background = "block";
 });
-const previousObject = { todo: [], inprogress: [], pending: [], done: [] };
+let previousObject = "";
 const findTask = document.querySelector("#findTask");
 function findByName() {
   const status = ["todo", "done", "pending", "inprogress"];
+  if(!previousObject){
+    previousObject = JSON.parse(JSON.stringify(taskLocal[currentUser]));
+  }
   if (findTask.value.trim()) {
-    status.forEach((statusValue) => {
-      previousObject[statusValue] =
-        taskLocal[currentUser][indexForRender][statusValue];
-    });
     status.forEach((statusValue) => {
       taskLocal[currentUser][indexForRender][statusValue] = taskLocal[
         currentUser
@@ -682,39 +838,83 @@ function findByName() {
 
     render();
   } else {
-    status.forEach((statusValue) => {
-      taskLocal[currentUser][indexForRender][statusValue] =
-        previousObject[statusValue];
-    });
+    if(previousObject){
+      taskLocal[currentUser] = JSON.parse(JSON.stringify(previousObject))
+    }
     render();
   }
 }
+console.log(
+  taskLocal[currentUser][indexForRender]["todo"][1].dueDate.split("-")[1]
+);
+
+function getSelectedValue(){
+  return document.querySelector(".optionSort").value;
+}
+
 function sortByOption() {
   const status = ["todo", "done", "pending", "inprogress"];
-  status.forEach((statusValue) => {
-    for (
-      let i = 0;
-      i < taskLocal[currentUser][indexForRender][statusValue].length;
-      i++
-    ) {
+  if (getSelectedValue() == "Hạn chót") {
+    status.forEach((statusValue) => {
       for (
-        let j = 0;
-        j < taskLocal[currentUser][indexForRender][statusValue].length - 1 - i;
-        j++
+        let i = 0;
+        i < taskLocal[currentUser][indexForRender][statusValue].length;
+        i++
       ) {
-        if (
-          taskLocal[currentUser][indexForRender][statusValue][j].name >
-          taskLocal[currentUser][indexForRender][statusValue][j + 1].name
+        for (
+          let j = 0;
+          j <
+          taskLocal[currentUser][indexForRender][statusValue].length - 1 - i;
+          j++
         ) {
-          let temp = taskLocal[currentUser][indexForRender][statusValue][j];
-          taskLocal[currentUser][indexForRender][statusValue][j] =
-            taskLocal[currentUser][indexForRender][statusValue][j + 1];
-          taskLocal[currentUser][indexForRender][statusValue][j + 1] = temp;
+          if (
+            taskLocal[currentUser][indexForRender][statusValue][
+              j
+            ].dueDate.split("-")[1] <
+            taskLocal[currentUser][indexForRender][statusValue][
+              j + 1
+            ].dueDate.split("-")[1]
+          ) {
+            let temp = taskLocal[currentUser][indexForRender][statusValue][j];
+            taskLocal[currentUser][indexForRender][statusValue][j] =
+              taskLocal[currentUser][indexForRender][statusValue][j + 1];
+            taskLocal[currentUser][indexForRender][statusValue][j + 1] = temp;
+          }
         }
       }
-    }
-  });
-  render();
+    });
+    render();
+  }else if(getSelectedValue() == "Độ ưu tiên"){
+    status.forEach((statusValue) => {
+      for (
+        let i = 0;
+        i < taskLocal[currentUser][indexForRender][statusValue].length;
+        i++
+      ) {
+        for (
+          let j = 0;
+          j <
+          taskLocal[currentUser][indexForRender][statusValue].length - 1 - i;
+          j++
+        ) {
+          if (
+            priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
+              j
+            ].priority] <
+            priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
+              j + 1
+            ].priority]
+          ) {
+            let temp = taskLocal[currentUser][indexForRender][statusValue][j];
+            taskLocal[currentUser][indexForRender][statusValue][j] =
+              taskLocal[currentUser][indexForRender][statusValue][j + 1];
+            taskLocal[currentUser][indexForRender][statusValue][j + 1] = temp;
+          }
+        }
+      }
+    });
+    render();
+  }
 }
 function getIndexValue() {
   const index = document.querySelector("#changeRole").value;
