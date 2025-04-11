@@ -57,42 +57,46 @@ const logOut = document.querySelector(".logOut");
 logOut.addEventListener("click", function () {
   localStorage.removeItem("loggin");
 });
-const table = document.querySelector(".table tbody");
+const table = document.querySelector(".table");
 
 function renderTable() {
-  table.textContent = "";
-  projectLocal[currentUser].forEach((value, index) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td colspan="6">
-      <button class="buttonSpinable">
-        <img
-          src="../Icon/Triangle.png"
-          width="13.5px"
-          height="12.5px" />
-      </button>
-      <span
-        style="
-          font-weight: 800;
-          font-size: 16.11px;
-          line-height: 20px;
-          letter-spacing: 0px;
-        "
-        >${value.projectName}</span
-        >
-      </td>
+  table.length = 1;
+    projectLocal[currentUser].forEach((value, index) => {
+      const row = document.createElement("tbody");
+      row.innerHTML = `
+    <tr>
+    <td colspan="6">
+    <button class="buttonSpinable">
+    <img
+    src="../Icon/Triangle.png"
+    width="13.5px"
+    height="12.5px" />
+    </button>
+    <span
+    style="
+    font-weight: 800;
+    font-size: 16.11px;
+    line-height: 20px;
+    letter-spacing: 0px;
+    "
+    >${value.projectName}</span
+    >
+    </td>
+    </tr>
     `;
-    const tfoot = document.createElement("div");
-    tfoot.classList.add("table-content");
-    tfoot.setAttribute("id", `table${index}`);
-    tfoot.innerHTML = ``;
-    row.querySelector(".buttonSpinable").addEventListener("click", function () {
-      this.classList.toggle("rotated");
-      row.querySelector(".table-content").classList.toggle("active");
+      const tfoot = document.createElement("tbody");
+      tfoot.classList.add("table-content");
+      tfoot.setAttribute("id", `table${index}`);
+      tfoot.innerHTML = ``;
+      row
+        .querySelector(".buttonSpinable")
+        .addEventListener("click", function () {
+          this.classList.toggle("rotated");
+          row.querySelector(".table-content").classList.toggle("active");
+        });
+      table.appendChild(row);
+      table.appendChild(tfoot);
     });
-    table.appendChild(row);
-    table.appendChild(tfoot);
-  });
 }
 renderTable();
 let number = 0;
@@ -150,7 +154,10 @@ function sortByOption() {
           for (let i = 0; i < number; i++) {
             for (let j = 0; j < number - i - 1; j++) {
               console.log(value2.dueDate.replace(" ", "").split("-")[1]);
-              if (value2.dueDate.replace(" ", "").split("-")[1][j] > value2.dueDate.replace(" ", "").split("-")[1][j + 1]) {
+              if (
+                value2.dueDate.replace(" ", "").split("-")[1][j] >
+                value2.dueDate.replace(" ", "").split("-")[1][j + 1]
+              ) {
                 let temp = value2[j];
                 value2[j] = value2[j + 1];
                 value2[j + 1] = temp;
