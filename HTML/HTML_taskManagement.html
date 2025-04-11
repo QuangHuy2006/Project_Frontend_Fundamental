@@ -106,14 +106,16 @@
           <span>Quản lý nhiệm vụ</span>
         </div>
         <div class="filter">
-          <select class="select">
+          <select class="select" onchange="sortByOption()">
             <option>Sắp xếp theo</option>
-            <option>ko bít</option>
-            <option>ko bít</option>
+            <option>Hạn chót</option>
+            <option>Độ ưu tiên</option>
           </select>
           <input
             type="text"
-            placeholder="Tìm kiếm nhiệm vụ" />
+            placeholder="Tìm kiếm nhiệm vụ"
+            id="findValue" 
+            onkeyup="findByName()"/>
         </div>
         <div class="table">
           <span class="table-header" >Danh Sách Nhiệm Vụ</span>

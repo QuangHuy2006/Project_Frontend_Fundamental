@@ -147,6 +147,7 @@ table {
   border: 1px;
   table-layout: fixed;
   margin-top: 11.2px;
+  white-space: nowrap;
 }
 
 table button {
@@ -168,9 +169,6 @@ table thead tr th {
   padding: 12px;
 }
 
-.table tbody{
-  width: 100%;
-}
 
 .table-content.active {
   display: table-row-group;
@@ -267,9 +265,11 @@ table thead {
   justify-content: flex-end;
   width: 68%;
 }
+
 .select {
   padding: 6px 12px;
 }
+
 .filter input {
   padding-left: 13px;
 }

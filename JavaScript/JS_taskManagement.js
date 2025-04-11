@@ -80,25 +80,27 @@ function renderTable() {
         >
       </td>
     `;
-    const tfoot = document.createElement("tfoot");
+    const tfoot = document.createElement("tr");
     tfoot.classList.add("table-content");
     tfoot.setAttribute("id", `table${index}`);
-    tfoot.innerHTML=``;
+    tfoot.innerHTML = ``;
     row.querySelector(".buttonSpinable").addEventListener("click", function () {
       this.classList.toggle("rotated");
       row.querySelector(".table-content").classList.toggle("active");
     });
     table.appendChild(row);
-    table.appendChild(tfoot);
+    // table.appendChild(tfoot);
   });
 }
 renderTable();
 
 function renderEachProject() {
   const status = ["todo", "inprogress", "done", "pending"];
+  for (let i = 0; i < taskLocal[currentUser].length; i++) {
+  document.querySelector(`#table${i}`).textContent = "";
+  }
   status.forEach((statusValue) => {
     for (let i = 0; i < taskLocal[currentUser].length; i++) {
-      console.log(taskLocal[currentUser][i][statusValue]);
       [taskLocal[currentUser][i]].forEach((value) => {
         value[statusValue].forEach((value2) => {
           const row = document.createElement("tr");
@@ -133,3 +135,25 @@ function renderEachProject() {
   });
 }
 renderEachProject();
+const findValue = document.querySelector("#findValue");
+const findName = [];
+function sortByOption() {
+  if (document.querySelector(".select") == "Hạn chót") {
+  } else if (document.querySelector(".select") == "Độ ưu tiên") {
+  }
+}
+function findByName() {
+  const status = ["todo", "inprogress", "done", "pending"];
+  status.forEach((statusValue) => {
+    taskLocal[currentUser].forEach((value) => {
+      findName.push(
+        value[statusValue].filter((value2) =>
+          value2.name.includes(findValue.value.trim())
+        )
+      );
+      renderEachProject(findName);
+      console.log(findName);
+      
+    });
+  });
+}

@@ -29,7 +29,7 @@ signUpButton.addEventListener("click", function (event) {
       if (username.value.trim()) {
         usernameError.textContent = "";
         username.style.borderColor = "whitesmoke";
-        usernameError.style.color = "black"
+        usernameError.style.color = "black";
         check++;
       }
     }
@@ -126,10 +126,10 @@ function showAlert() {
     text: "Đăng kí thành công!",
     icon: "success",
     timer: 3000,
-  }).then(() =>{
+  }).then(() => {
     window.location.replace("HTML_SignIn.html");
   });
 }
-if(localStorage.getItem("loggin")){
+if (localStorage.getItem("loggin")) {
   window.history.back();
 }
