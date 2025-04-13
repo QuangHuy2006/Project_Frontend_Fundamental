@@ -63,9 +63,9 @@ const fixTaskWindow = document.querySelector(".fix-task-window");
 const fixTaskName = document.querySelector("#fixTaskName");
 
 const priorityOrder = {
-  Cao: 1,
+  "Cao": 1,
   "Trung bình": 2,
-  Thấp: 3,
+  "Thấp": 3,
 };
 function checkValidTaskName() {
   const status = ["todo", "inprogress", "done", "pending"];
@@ -93,7 +93,11 @@ function checkValidEmail() {
     });
   });
 }
-checkValidEmail();
+
+if(taskLocal[currentUser][indexForRender]){
+  checkValidEmail();
+}
+
 const buttonCancelTask = document.querySelector(
   "#add-task-window-header-button"
 );
@@ -122,7 +126,7 @@ brand.textContent = `${
 
 const cancel = document.querySelector("#cancel");
 
-const save = document.querySelector("#save");
+const save = document.querySelector(".confirmDelete");
 
 const confirmChange = document.querySelector(".confirmChange");
 
@@ -244,7 +248,7 @@ function renderUser(tableChoice) {
                           }"></span>
                           <button class="removeUserFromList">
                             <img 
-                            src="../Icon/Trash.png"
+                            src="../assets/icon/Trash.png"
                             width="20px"
                             height="20px"
                             >
@@ -844,9 +848,6 @@ function findByName() {
     render();
   }
 }
-console.log(
-  taskLocal[currentUser][indexForRender]["todo"][1].dueDate.split("-")[1]
-);
 
 function getSelectedValue(){
   return document.querySelector(".optionSort").value;

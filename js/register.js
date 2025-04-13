@@ -127,7 +127,7 @@ function showAlert() {
     icon: "success",
     timer: 3000,
   }).then(() => {
-    window.location.replace("HTML_SignIn.html");
+    window.location.replace("login.html");
   });
 }
 if (localStorage.getItem("loggin")) {

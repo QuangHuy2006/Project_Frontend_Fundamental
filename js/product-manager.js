@@ -56,7 +56,9 @@ function checkValidProjectName() {
   });
 }
 
-checkValidProjectName();
+if(projectLocal[currentUser]){
+  checkValidProjectName();
+}
 
 function changeProjectName(){
   addChangeWindow.style.display = "none";
@@ -133,20 +135,6 @@ function findByName() {
   render(findName);
   renderPages();
 }
-const navLink = document.querySelector("#nav-links");
-const navLinks = [
-  {
-    link: "../HTML/HTML_projectManagement.html",
-    class: "project",
-    name: "Dự Án",
-  },
-  {
-    link: "../HTML/HTML_taskManagement.html",
-    class: "task",
-    name: "Nhiệm vụ của tôi",
-  },
-  { link: "../HTML/HTML_signIn.html", class: "logOut", name: "Đăng xuất" },
-];
 buttonAddWindow.addEventListener("click", function (event) {
   event.preventDefault();
   addProjectWindow.style.display = "block";
@@ -267,7 +255,7 @@ function render(userInput) {
             <div>
                 <button class="fix">Sửa</button>
                 <button class="delete">Xóa</button>
-                <button class="detail"><a href="../HTML/HTML_mission.html?${index + 1}">Chi tiết</a></button>
+                <button class="detail"><a href="../pages/dashboard.html?${index + 1}">Chi tiết</a></button>
             </div>
         </td>
         `;

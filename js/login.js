@@ -42,7 +42,7 @@ signInButton.addEventListener("click", function (event) {
           localStorage.setItem("user", emailAddress.value);
           announce.style.color = "green";
           announce.textContent = "Đăng nhập thành công";
-          window.location.replace("HTML_projectManagement.html");
+          window.location.replace("product-manager.html");
           localStorage.setItem("loggin", "true");
         } else {
           announce.style.color = "red";

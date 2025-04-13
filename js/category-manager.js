@@ -5,11 +5,13 @@ let allTasks = [];
 let newAllTasks = [];
 const statusList = ["todo", "inprogress", "pending", "done"];
 for (let i = 0; i < 2; i++) {
-  statusList.forEach((statusKey) => {
-    allTasks.push(...taskLocal[currentUser][i][statusKey]);
-  });
-  newAllTasks.push(allTasks);
-  allTasks = [];
+  if(taskLocal[currentUser][i]){
+    statusList.forEach((statusKey) => {
+      allTasks.push(...taskLocal[currentUser][i][statusKey]);
+    });
+    newAllTasks.push(allTasks);
+    allTasks = [];
+  }
 }
 const findName = [];
 taskLocal[currentUser] = taskLocal[currentUser] || [];
@@ -65,7 +67,7 @@ function renderTable() {
     <td colspan="6">
     <button class="buttonSpinable">
     <img
-    src="../Icon/Triangle.png"
+    src="../assets/icon/Triangle.png"
     width="13.5px"
     height="12.5px" />
     </button>
@@ -120,7 +122,7 @@ function renderEachProject() {
           <td class="secondThird">${
             value2.status
           } <button class="revise" data-value="${value2.status}"
-          data-id="${i}"><img src=../Icon/revise.png width="15px" height="15px"></button></td>
+          data-id="${i}"><img src=../assets/icon/revise.png width="15px" height="15px"></button></td>
           <td class="date" class="fourthRow">${value2.date}</td>
           <td class="dueDate" class="firthRow">${value2.dueDate}</td>
           <td class="sixthRow"><span class="${

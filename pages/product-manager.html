@@ -2,17 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0" />
-    <title>Project Management</title>
-    <link
-      rel="stylesheet"
-      href="../CSS/CSS_projectManagement.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Manager</title>
+    <link rel="stylesheet" href="../css/product-manager.css" />
     <link
       rel="icon"
-      href="../Image/groupProjectManagement.png"
-      type="image/x-icon" />
+      href="../assets/image/groupProjectManagement.png"
+      type="image/x-icon"
+    />
   </head>
   <body>
     <div class="container">
@@ -20,65 +17,59 @@
       <div class="confirm-delete-window">
         <div class="window-confirm-header">
           <span id="add-window-header-text">Xác nhận xóa</span>
-          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+          <span
+            ><button id="add-window-header-button" onclick="closer()">
+              X
+            </button></span
+          >
         </div>
         <div class="window-body">
           <span id="text">Bạn chắc chắn muốn xoá dự án này?</span>
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button
-            id="save">
-            Xóa
-          </button>
+          <button id="save">Xóa</button>
         </div>
       </div>
       <div class="add-window">
         <div class="window-header">
           <span id="add-window-header-text">Thêm/sửa dự án</span>
-          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+          <span
+            ><button id="add-window-header-button" onclick="closer()">
+              X
+            </button></span
+          >
         </div>
         <div class="window-body">
           <span id="text">Tên dự án</span>
-          <input
-            type="text"
-            id="projectName" />
+          <input type="text" id="projectName" />
           <span id="error"></span>
           <span id="text">Mô tả dự án</span>
-          <textarea
-            cols="10"
-            rows="3"
-            id="projectDecribe"></textarea>
+          <textarea cols="10" rows="3" id="projectDecribe"></textarea>
           <span id="error2"></span>
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button
-            id="save"
-            onclick="addUser()">
-            Lưu
-          </button>
+          <button id="save" onclick="addUser()">Lưu</button>
         </div>
       </div>
       <div class="add-window2">
         <div class="window-header">
           <span id="add-window-header-text">Sửa thông tin dự án</span>
-          <span><button id="add-window-header-button" onclick="closer()">X</button></span>
+          <span
+            ><button id="add-window-header-button" onclick="closer()">
+              X
+            </button></span
+          >
         </div>
         <div class="window-body">
           <span id="text">Tên dự án</span>
-          <input
-            type="text"
-            id="changedName" />
+          <input type="text" id="changedName" />
           <span id="changeNameError"></span>
         </div>
         <div class="window-footer">
           <button id="cancel" onclick="closer()">Huỷ</button>
-          <button
-            id="save"
-            onclick="changeProjectName()">
-            Lưu
-          </button>
+          <button id="save" onclick="changeProjectName()">Lưu</button>
         </div>
       </div>
       <div class="header">
@@ -88,19 +79,17 @@
         <div class="header-right">
           <ul id="nav-links">
             <li>
-              <a href="../HTML/HTML_projectManagement.html" class="project">
+              <a href="../pages/product-manager.html" class="project">
                 Dự Án
               </a>
             </li>
             <li>
-              <a href="../HTML/HTML_taskManagement.html" class="task">
+              <a href="../pages/category-manager.html" class="task">
                 Nhiệm vụ của tôi
               </a>
             </li>
             <li>
-              <a href="../HTML/HTML_signIn.html" class="logOut">
-                Đăng xuất
-              </a>
+              <a href="../pages/login.html" class="logOut"> Đăng xuất </a>
             </li>
           </ul>
         </div>
@@ -114,8 +103,9 @@
               <input
                 type="text"
                 class="projectNameInput"
-                placeholder="Tìm kiếm dự án" 
-                onkeyup="findByName()"/>
+                placeholder="Tìm kiếm dự án"
+                onkeyup="findByName()"
+              />
             </div>
           </div>
           <div class="body-content">Danh Sách Dự Án</div>
@@ -144,6 +134,6 @@
         </div>
       </div>
     </div>
-    <script src="../JavaScript/JS_projectManagement.js"></script>
+    <script src="../js/product-manager.js"></script>
   </body>
 </html>
