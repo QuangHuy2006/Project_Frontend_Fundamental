@@ -1,6 +1,16 @@
 const taskLocal = JSON.parse(localStorage.getItem("userTask")) || {};
 const currentUser = localStorage.getItem("user");
 const findValue = document.querySelector("#findValue");
+let allTasks = [];
+let newAllTasks = [];
+const statusList = ["todo", "inprogress", "pending", "done"];
+for (let i = 0; i < 2; i++) {
+  statusList.forEach((statusKey) => {
+    allTasks.push(...taskLocal[currentUser][i][statusKey]);
+  });
+  newAllTasks.push(allTasks);
+  allTasks = [];
+}
 const findName = [];
 taskLocal[currentUser] = taskLocal[currentUser] || [];
 const stored = {};
@@ -92,12 +102,11 @@ function renderEachProject() {
   for (let i = 0; i < taskLocal[currentUser].length; i++) {
     document.querySelector(`#table${i}`).textContent = "";
   }
-  status.forEach((statusValue) => {
-    for (let i = 0; i < taskLocal[currentUser].length; i++) {
-      [taskLocal[currentUser][i]].forEach((value) => {
-        value[statusValue].forEach((value2, index) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
+  for (let i = 0; i < taskLocal[currentUser].length; i++) {
+    newAllTasks[i].forEach((value, index) => {
+      [value].forEach((value2) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
           <td class="firstRow"><span class="taskName">${value2.name}</span></td>
           <td class="secondRow"><span class="${
             value2.priority == "Trung bình"
@@ -110,9 +119,7 @@ function renderEachProject() {
           }">${value2.priority}</span></td>
           <td class="secondThird">${
             value2.status
-          } <button class="revise" data-value="${
-            value2.status
-          }" 
+          } <button class="revise" data-value="${value2.status}"
           data-id="${i}"><img src=../Icon/revise.png width="15px" height="15px"></button></td>
           <td class="date" class="fourthRow">${value2.date}</td>
           <td class="dueDate" class="firthRow">${value2.dueDate}</td>
@@ -126,41 +133,41 @@ function renderEachProject() {
               : ""
           }">${value2.progress}</span></td>
           `;
-          row.querySelector(".revise").addEventListener("click", function (e) {
-            e.preventDefault();
-            confirmWindowInput.style.display = "block";
-            background.style.display = "block";
-            changeList = this.getAttribute("data-value")
-              .toLowerCase()
-              .replace(" ", "");
-            indexToChange = index;
-            listIndex = this.getAttribute("data-id");
-          });
-          document.querySelector(`#table${i}`).appendChild(row);
+        row.querySelector(".revise").addEventListener("click", function (e) {
+          e.preventDefault();
+          confirmWindowInput.style.display = "block";
+          background.style.display = "block";
+          changeList = this.getAttribute("data-value")
+            .toLowerCase()
+            .replace(" ", "");
+          indexToChange = index;
+          listIndex = this.getAttribute("data-id");
         });
+        document.querySelector(`#table${i}`).appendChild(row);
       });
+    }); 
+  }
+  confirmChangeButton.addEventListener("click", function () {
+    if (!input.value.trim()) {
+      error.textContent = "Tên Trạng thái mới không được để trống";
+      error.style.color = "red";
+      input.style.borderColor = "red";
+    } else {
+      confirmWindow.style.display = "block";
+      confirmWindowInput.style.display = "none";
     }
-    confirmChangeButton.addEventListener("click", function () {
-      if (!input.value.trim()) {
-        error.textContent = "Tên Trạng thái mới không được để trống";
-        error.style.color = "red";
-        input.style.borderColor = "red";
-      } else {
-        confirmWindow.style.display = "block";
-        confirmWindowInput.style.display = "none";
-      }
-    });
-    document
-      .querySelector(".confirm-change-button")
-      .addEventListener("click", function () {
-        taskLocal[currentUser][listIndex][changeList][indexToChange].status =
-          input.value.trim();
-        renderEachProject();
-        localStorage.setItem("userTask", JSON.stringify(taskLocal));
-        confirmWindow.style.display = "none";
-        background.style.display = "none";
-      });
   });
+  document
+    .querySelector(".confirm-change-button")
+    .addEventListener("click", function () {
+      console.log(taskLocal[currentUser][listIndex][changeList][indexToChange]);
+      taskLocal[currentUser][listIndex][changeList][indexToChange].status =
+        input.value.trim();
+      renderEachProject();
+      renderProject();
+      confirmWindow.style.display = "none";
+      background.style.display = "none";
+    });
 }
 renderEachProject();
 
@@ -215,3 +222,17 @@ function findByName() {
     renderEachProject();
   }
 }
+function renderProject() {
+  const status = ["todo", "inprogress", "done", "pending"];
+  status.forEach((statusValue) => {
+    taskLocal[currentUser].forEach((value) => {
+      const allTask = [...value[statusValue]];
+      value[statusValue] = [];
+      allTask.forEach((value2) => {
+        value[value2.status.toLowerCase().replace(" ", "")].push(value2);
+      });
+    });
+  });
+  localStorage.setItem("userTask", JSON.stringify(taskLocal));
+}
+renderProject();

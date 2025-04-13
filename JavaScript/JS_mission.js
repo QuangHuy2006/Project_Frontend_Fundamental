@@ -772,7 +772,7 @@ function render() {
         getPriorityValue2();
       taskLocal[currentUser][indexForRender][fixList][indexToChange].status =
         getStatusValue2();
-      localStorage.setItem("userTask", JSON.stringify(taskLocal));
+      renderProject();
       render();
       checkValidTaskName();
       fixTaskWindow.style.display = "none";
@@ -928,3 +928,19 @@ const logOut = document.querySelector(".logOut");
 logOut.addEventListener("click", function () {
   localStorage.removeItem("loggin");
 });
+function renderProject() {
+  const status = ["todo", "inprogress", "done", "pending"];
+  status.forEach((statusValue) => {
+    taskLocal[currentUser].forEach((value) => {
+        const allTask = [
+          ...value[statusValue],
+        ];
+        value[statusValue] = [];
+        allTask.forEach(value2 => { 
+            value[value2.status.toLowerCase().replace(" ", "")].push(value2);
+        })
+      });
+    });
+    localStorage.setItem("userTask", JSON.stringify(taskLocal));
+}
+renderProject();

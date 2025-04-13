@@ -145,7 +145,6 @@ table {
   width: 100%;
   border-collapse: collapse;
   border: 1px;
-  table-layout: fixed;
   margin-top: 11.2px;
   white-space: nowrap;
   margin-bottom: -13px;
@@ -446,3 +445,28 @@ table thead {
   background-color: #DC3545;
   width: fit-content;
 }
+
+.firstRow{
+  width: 30%;
+}
+
+.secondRow{
+  text-align: center;
+}
+
+.priority{
+  width: 16%;
+}
+
+.status{
+ width: 18.5%;
+}
+
+.dateHeader{
+  width: 11%;
+}
+
+.dueDateHeader{
+  width: 10.9%;
+}
+
