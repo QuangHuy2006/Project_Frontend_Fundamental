@@ -4,6 +4,7 @@ const findValue = document.querySelector("#findValue");
 let allTasks = [];
 let newAllTasks = [];
 const statusList = ["todo", "inprogress", "pending", "done"];
+const statusAvailable = ["To do", "In progress", "Pending", "Done"];
 for (let i = 0; i < 2; i++) {
   if (taskLocal[currentUser][i]) {
     statusList.forEach((statusKey) => {
@@ -155,14 +156,20 @@ function renderEachProject() {
       error.style.color = "red";
       input.style.borderColor = "red";
     } else {
-      confirmWindow.style.display = "block";
-      confirmWindowInput.style.display = "none";
+      if (statusAvailable.some((status) => status === input.value.trim())) {
+        confirmWindow.style.display = "block";
+        confirmWindowInput.style.display = "none";
+      } else {
+        error.style.color = "red";
+        error.textContent =
+          "Trạng thái phù hợp(To do, In progress, Done, Pending)";
+        input.style.borderColor = "red";
+      }
     }
   });
   document
     .querySelector(".confirm-change-button")
     .addEventListener("click", function () {
-      console.log(taskLocal[currentUser][listIndex][changeList][indexToChange]);
       taskLocal[currentUser][listIndex][changeList][indexToChange].status =
         input.value.trim();
       renderEachProject();
@@ -187,7 +194,7 @@ function sortByOption() {
       "Trung bình": 2,
       Thấp: 3,
     };
-    for(let i = 0; i < newAllTasks.length; i++){
+    for (let i = 0; i < newAllTasks.length; i++) {
       newAllTasks[i].sort(
         (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
       );
@@ -196,7 +203,6 @@ function sortByOption() {
   }
 }
 let previousObject = "";
-console.log(newAllTasks);
 
 function findByName() {
   const status = ["todo", "inprogress", "done", "pending"];
