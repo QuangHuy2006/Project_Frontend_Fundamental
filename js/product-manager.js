@@ -48,24 +48,6 @@ const changedNameError = document.querySelector("#changeNameError");
 
 let usedProject = [];
 
-function checkValidProjectName() {
-  projectLocals[currentUser].forEach((value, index) => {
-    if (value.projectName != usedProject[index]) {
-      usedProject.push(value.projectName);
-    }
-  });
-}
-
-if(projectLocal[currentUser]){
-  checkValidProjectName();
-}
-
-function changeProjectName(){
-  addChangeWindow.style.display = "none";
-  background.style.display = "none";
-  changedName.value = "";
-}
-
 function renderPages() {
   const totalPages = Math.ceil(
     projectLocals[currentUser].length / totalPerPage
@@ -147,10 +129,16 @@ function addUser() {
     projectName.style.borderColor = "red";
     projectNameError.style.color = "red";
   } else {
-    projectNameError.textContent = "";
-    projectName.style.borderColor = "lightgray";
-    projectNameError.style.color = "lightgray";
-    checkIfValueValid++;
+    if (projectName.value.trim().length < 5) {
+      projectNameError.textContent = "Tên dự án phải từ 6 kí tự trở lên!";
+      projectName.style.borderColor = "red";
+      projectNameError.style.color = "red";
+    }else{
+      projectNameError.textContent = "";
+      projectName.style.borderColor = "lightgray";
+      projectNameError.style.color = "lightgray";
+      checkIfValueValid++;
+    }
   }
   if (!projectDecribe.value.trim()) {
     projectDecribeError.textContent = "Tên dự án không được để trống!";
@@ -195,7 +183,7 @@ function addUser() {
         localStorage.setItem("projects", JSON.stringify(projectLocals));
         render(projectLocals[currentUser]);
         renderPages();
-        checkValidProjectName();
+        usedProject.push(projectName.value.trim());
         addProjectWindow.style.display = "none";
         background.style.display = "none";
         projectDecribe.value = "";
@@ -227,7 +215,7 @@ function addUser() {
       localStorage.setItem("projects", JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);
       renderPages();
-      checkValidProjectName();
+      usedProject.push(projectName.value.trim());
       addProjectWindow.style.display = "none";
       background.style.display = "none";
       projectDecribe.value = "";
@@ -241,6 +229,9 @@ if (projectLocals[currentUser].length) {
   render(projectLocals[currentUser]);
   renderPages();
 }
+
+let indexForChange = 0;
+let previousValue = "";
 function render(userInput) {
   const getFirstElementEachPage = (currentPage - 1) * totalPerPage;
   const getLastElementEachPage = totalPerPage * currentPage;
@@ -255,24 +246,18 @@ function render(userInput) {
             <div>
                 <button class="fix">Sửa</button>
                 <button class="delete">Xóa</button>
-                <button class="detail"><a href="../pages/dashboard.html?${index + 1}">Chi tiết</a></button>
+                <button class="detail"><a href="../pages/dashboard.html?${
+                  index + 1
+                }">Chi tiết</a></button>
             </div>
         </td>
         `;
     row.querySelector(".fix").addEventListener("click", function (event) {
+      previousValue = projectLocals[currentUser][index].projectName;
       event.preventDefault();
-      const previousValue = user[index].projectName;
-      addChangeWindow.style.display = "block"
-      background.style.display = "block"
-      if(!changedName.value.trim()){
-        user[index].projectName = previousValue;
-      }else{
-        user[index].projectName = changedName.value.trim();
-      }
-      localStorage.setItem("projects", JSON.stringify(projectLocals));
-      render(projectLocals[currentUser]);
-      usedProject[usedProject.findIndex(value => value == previousValue)] = user[index].projectName;
-      checkValidProjectName();
+      addChangeWindow.style.display = "block";
+      background.style.display = "block";
+      indexForChange = index;
     });
     row.querySelector(".delete").addEventListener("click", function (event) {
       event.preventDefault();
@@ -285,7 +270,12 @@ function render(userInput) {
         projectLocals[currentUser].length / totalPerPage
       );
       const realIndex = (currentPage - 1) * totalPerPage + deletedId;
-      usedProject.splice(usedProject.findIndex(value => value === projectLocals[currentUser][realIndex].projectName),1);
+      usedProject.splice(
+        usedProject.findIndex(
+          (value) => value === projectLocals[currentUser][realIndex].projectName
+        ),
+        1
+      );
       projectLocals[currentUser].splice(realIndex, 1);
       localStorage.setItem(`projects`, JSON.stringify(projectLocals));
       render(projectLocals[currentUser]);
@@ -298,10 +288,26 @@ function render(userInput) {
     table.appendChild(row);
   });
 }
-if(!localStorage.getItem("loggin") || ""){
+function changeProjectName() {
+  if (changedName.value.trim()) {
+    projectLocals[currentUser][indexForChange].projectName =
+      changedName.value.trim();
+    localStorage.setItem("projects", JSON.stringify(projectLocals));
+    render(projectLocals[currentUser]);
+    usedProject[usedProject.findIndex((value) => value == previousValue)] =
+      projectLocals[currentUser][indexForChange].projectName;
+    addChangeWindow.style.display = "none";
+    background.style.display = "none";
+    changedName.value = "";
+  }
+  addChangeWindow.style.display = "none";
+  background.style.display = "none";
+  changedName.value = "";
+}
+if (!localStorage.getItem("loggin") || "") {
   window.history.back();
 }
 const logOut = document.querySelector(".logOut");
-logOut.addEventListener("click", function(){
+logOut.addEventListener("click", function () {
   localStorage.removeItem("loggin");
-})
+});

@@ -246,11 +246,6 @@ table thead tr th,td {
   height: 15px;
 }
 
-
-.sixthRow{
-  text-align: center;
-}
-
 table thead {
   background-color: #dfe0e1;
 }
@@ -447,26 +442,33 @@ table thead {
 }
 
 .firstRow{
-  width: 30%;
+ max-width: 18vh;
 }
 
 .secondRow{
+  width: 20vh;
+}
+
+.thirdRow{
+  width: 20vh;
+}
+
+.fourthRow{
+  width: 20vh;
+}
+
+.firthRow{
+  width: 20vh;
+}
+
+.lastRow{
+  width: 20vh;
+}
+
+#priorityRow{
   text-align: center;
 }
 
-.priority{
-  width: 16%;
+#progressRow{
+  text-align: center;
 }
-
-.status{
- width: 18.5%;
-}
-
-.dateHeader{
-  width: 11%;
-}
-
-.dueDateHeader{
-  width: 10.9%;
-}
-

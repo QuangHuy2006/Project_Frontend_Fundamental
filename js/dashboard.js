@@ -885,7 +885,8 @@ function sortByOption() {
       }
     });
     render();
-  }else if(getSelectedValue() == "Độ ưu tiên"){
+  }
+  if(getSelectedValue() == "Độ ưu tiên"){
     status.forEach((statusValue) => {
       for (
         let i = 0;
@@ -901,7 +902,7 @@ function sortByOption() {
           if (
             priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
               j
-            ].priority] <
+            ].priority] >
             priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
               j + 1
             ].priority]

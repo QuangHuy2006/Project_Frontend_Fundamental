@@ -5,7 +5,7 @@ let allTasks = [];
 let newAllTasks = [];
 const statusList = ["todo", "inprogress", "pending", "done"];
 for (let i = 0; i < 2; i++) {
-  if(taskLocal[currentUser][i]){
+  if (taskLocal[currentUser][i]) {
     statusList.forEach((statusKey) => {
       allTasks.push(...taskLocal[currentUser][i][statusKey]);
     });
@@ -110,7 +110,7 @@ function renderEachProject() {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td class="firstRow"><span class="taskName">${value2.name}</span></td>
-          <td class="secondRow"><span class="${
+          <td class="secondRow" id="priorityRow"><span class="${
             value2.priority == "Trung bình"
               ? "priorityAverage"
               : value2.priority == "Cao"
@@ -119,13 +119,13 @@ function renderEachProject() {
               ? "priorityLow"
               : ""
           }">${value2.priority}</span></td>
-          <td class="secondThird">${
+          <td class="thirdRow">${
             value2.status
           } <button class="revise" data-value="${value2.status}"
           data-id="${i}"><img src=../assets/icon/revise.png width="15px" height="15px"></button></td>
           <td class="date" class="fourthRow">${value2.date}</td>
           <td class="dueDate" class="firthRow">${value2.dueDate}</td>
-          <td class="sixthRow"><span class="${
+          <td class="lastRow" id="progressRow"><span class="${
             value2.progress == "Đúng tiến độ"
               ? "onProgress"
               : value2.progress == "Có rủi ro"
@@ -147,7 +147,7 @@ function renderEachProject() {
         });
         document.querySelector(`#table${i}`).appendChild(row);
       });
-    }); 
+    });
   }
   confirmChangeButton.addEventListener("click", function () {
     if (!input.value.trim()) {
@@ -174,53 +174,46 @@ function renderEachProject() {
 renderEachProject();
 
 function sortByOption() {
-  const status = ["todo", "inprogress", "done", "pending"];
   if (document.querySelector(".select").value == "Hạn chót") {
-    status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((project) => {
-        project[statusValue].sort(
-          (a, b) => b.dueDate.split("-")[1] - a.dueDate.split("-")[1]
-        );
-        renderEachProject();
-      });
-    });
+    for (let i = 0; i < newAllTasks.length; i++) {
+      newAllTasks[i].sort(
+        (a, b) => b.dueDate.split("-")[1] - a.dueDate.split("-")[1]
+      );
+    }
+    renderEachProject();
   } else if (document.querySelector(".select").value == "Độ ưu tiên") {
     const priorityOrder = {
       Cao: 1,
       "Trung bình": 2,
       Thấp: 3,
     };
-    status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((project) => {
-        project[statusValue].sort(
-          (a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]
-        );
-        renderEachProject();
-      });
-    });
+    for(let i = 0; i < newAllTasks.length; i++){
+      newAllTasks[i].sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
+      );
+    }
+    renderEachProject();
   }
 }
 let previousObject = "";
+console.log(newAllTasks);
+
 function findByName() {
   const status = ["todo", "inprogress", "done", "pending"];
   if (!previousObject) {
-    previousObject = JSON.parse(JSON.stringify(taskLocal[currentUser]));
+    previousObject = JSON.parse(JSON.stringify(newAllTasks));
   }
   if (findValue.value) {
-    status.forEach((statusValue) => {
-      taskLocal[currentUser].forEach((value) => {
-        value[statusValue] = value[statusValue].filter((value2) =>
-          value2.name.includes(findValue.value.trim())
-        );
-        renderEachProject();
-      });
-    });
+    for (let i = 0; i < newAllTasks.length; i++) {
+      newAllTasks[i] = newAllTasks[i].filter((value2) =>
+        value2.name.includes(findValue.value.trim())
+      );
+    }
+    renderEachProject();
   } else {
-    status.forEach((statusValue) => {
-      if (previousObject) {
-        taskLocal[currentUser] = JSON.parse(JSON.stringify(previousObject));
-      }
-    });
+    if (previousObject) {
+      newAllTasks = JSON.parse(JSON.stringify(previousObject));
+    }
     renderEachProject();
   }
 }
