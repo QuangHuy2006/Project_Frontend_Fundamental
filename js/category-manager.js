@@ -120,7 +120,7 @@ function renderEachProject() {
               ? "priorityLow"
               : ""
           }">${value2.priority}</span></td>
-          <td class="thirdRow">${
+          <td class="thirdRow" id="statusRow">${
             value2.status
           } <button class="revise" data-value="${value2.status}"
           data-id="${i}"><img src=../assets/icon/revise.png width="15px" height="15px"></button></td>
@@ -162,7 +162,7 @@ function renderEachProject() {
       } else {
         error.style.color = "red";
         error.textContent =
-          "Trạng thái phù hợp(To do, In progress, Done, Pending)";
+          "Trạng thái không phù hợp(To do, In progress, Done, Pending)";
         input.style.borderColor = "red";
       }
     }
@@ -182,10 +182,16 @@ renderEachProject();
 
 function sortByOption() {
   if (document.querySelector(".select").value == "Hạn chót") {
-    for (let i = 0; i < newAllTasks.length; i++) {
-      newAllTasks[i].sort(
-        (a, b) => b.dueDate.split("-")[1] - a.dueDate.split("-")[1]
-      );
+    for (let amount = 0; amount < newAllTasks.length; amount++) {
+      for(let i = 0; i < newAllTasks[amount].length; i++){
+        for(let j = 0 ; j < newAllTasks[amount].length - i - 1; j++){
+          if(newAllTasks[amount][j].dueDate.split("-")[1] < newAllTasks[amount][j + 1].dueDate.split("-")[1]){
+            let temp = newAllTasks[amount][j];
+            newAllTasks[amount][j] = newAllTasks[amount][j + 1];
+            newAllTasks[amount][j + 1] = temp;
+          }
+        }
+      }
     }
     renderEachProject();
   } else if (document.querySelector(".select").value == "Độ ưu tiên") {
@@ -194,10 +200,16 @@ function sortByOption() {
       "Trung bình": 2,
       Thấp: 3,
     };
-    for (let i = 0; i < newAllTasks.length; i++) {
-      newAllTasks[i].sort(
-        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]
-      );
+    for (let amount = 0; amount < newAllTasks.length; amount++) {
+      for(let i = 0; i < newAllTasks[amount].length; i++){
+        for(let j = 0 ; j < newAllTasks[amount].length - i - 1; j++){
+          if(priorityOrder[newAllTasks[amount][j].priority] < priorityOrder[newAllTasks[amount][j + 1].priority]){
+            let temp = newAllTasks[amount][j];
+            newAllTasks[amount][j] = newAllTasks[amount][j + 1];
+            newAllTasks[amount][j + 1] = temp;
+          }
+        }
+      }
     }
     renderEachProject();
   }

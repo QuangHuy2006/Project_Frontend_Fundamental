@@ -148,6 +148,7 @@ table {
   margin-top: 11.2px;
   white-space: nowrap;
   margin-bottom: -13px;
+  table-layout: fixed;
 }
 
 table button {
@@ -441,34 +442,14 @@ table thead {
   width: fit-content;
 }
 
-.firstRow{
- max-width: 18vh;
-}
-
-.secondRow{
-  width: 20vh;
-}
-
-.thirdRow{
-  width: 20vh;
-}
-
-.fourthRow{
-  width: 20vh;
-}
-
-.firthRow{
-  width: 20vh;
-}
-
-.lastRow{
-  width: 20vh;
-}
-
 #priorityRow{
   text-align: center;
 }
 
 #progressRow{
+  text-align: center;
+}
+
+#statusRow{
   text-align: center;
 }

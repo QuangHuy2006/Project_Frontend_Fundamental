@@ -28,6 +28,8 @@ const addWindow = document.querySelector(".add-window");
 
 let projectLocals = JSON.parse(localStorage.getItem("projects")) || {};
 
+let userLocals = JSON.parse(localStorage.getItem("userTask")) || [];
+
 const buttonAddWindow = document.querySelector(".addedProjectButton");
 
 const confirmDeleteWindow = document.querySelector(".confirm-delete-window");
@@ -108,7 +110,6 @@ function closer() {
   addChangeWindow.style.display = "none";
   addProjectWindow.style.display = "none";
 }
-console.log(projectLocals[currentUser].projectName);
 
 function findByName() {
   const findName = projectLocals[currentUser].filter((value) =>
@@ -258,6 +259,7 @@ function render(userInput) {
       addChangeWindow.style.display = "block";
       background.style.display = "block";
       indexForChange = index;
+      changedName.value = projectLocals[currentUser][index].projectName;
     });
     row.querySelector(".delete").addEventListener("click", function (event) {
       event.preventDefault();
@@ -277,7 +279,9 @@ function render(userInput) {
         1
       );
       projectLocals[currentUser].splice(realIndex, 1);
+      userLocals[currentUser].splice(realIndex, 1);
       localStorage.setItem(`projects`, JSON.stringify(projectLocals));
+      localStorage.setItem(`userTask`, JSON.stringify(userLocals));
       render(projectLocals[currentUser]);
       if (currentPage > totalPages) {
         currentPage = totalPages;

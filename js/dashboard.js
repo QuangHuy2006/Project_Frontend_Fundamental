@@ -63,9 +63,9 @@ const fixTaskWindow = document.querySelector(".fix-task-window");
 const fixTaskName = document.querySelector("#fixTaskName");
 
 const priorityOrder = {
-  "Cao": 1,
+  Cao: 1,
   "Trung bình": 2,
-  "Thấp": 3,
+  Thấp: 3,
 };
 function checkValidTaskName() {
   const status = ["todo", "inprogress", "done", "pending"];
@@ -94,9 +94,10 @@ function checkValidEmail() {
   });
 }
 
-if(taskLocal[currentUser][indexForRender]){
+if (taskLocal[currentUser][indexForRender]) {
   checkValidEmail();
 }
+console.log(userLocals[currentUser][0].member[0].role);
 
 const buttonCancelTask = document.querySelector(
   "#add-task-window-header-button"
@@ -124,7 +125,7 @@ brand.textContent = `${
   userLocals[currentUser][window.location.href.split("?")[1] - 1].projectName
 }`;
 
-const cancel = document.querySelector("#cancel");
+const cancel = document.querySelector("#cancelAndShow");
 
 const save = document.querySelector(".confirmDelete");
 
@@ -195,7 +196,7 @@ function addUser() {
           renderUser(tableForUserList);
           renderUserList();
           renderAssignee();
-          checkValidEmail();
+          usedEmail.push(userEmail.value.trim());
           addWindow.style.display = "none";
           addTaskWindow.style.display = "none";
           background.style.display = "none";
@@ -210,7 +211,7 @@ function addUser() {
         renderUser(tableForUserList);
         renderUserList();
         renderAssignee();
-        checkValidEmail();
+        usedEmail.push(userEmail.value.trim());
         addWindow.style.display = "none";
         addTaskWindow.style.display = "none";
         background.style.display = "none";
@@ -221,6 +222,7 @@ function addUser() {
 const deleteIndex = [];
 const changeRoleInput = [];
 function renderUser(tableChoice) {
+  let userIndex = 0;
   const array = [userLocals[currentUser][indexForRender]];
   deleteIndex.length = 0;
   changeRoleInput.length = 0;
@@ -243,9 +245,9 @@ function renderUser(tableChoice) {
                     </th>
                       <td>
                         <div class="tableRow">
-                          <span class="role"><input type="text" class="changeRole" value="${
-                            member.role
-                          }"></span>
+                          <span class="role"><input type="text" data-id="${
+                            userLocals[currentUser][0].member.length
+                          }" class="changeRole" value="${member.role}"></span>
                           <button class="removeUserFromList">
                             <img 
                             src="../assets/icon/Trash.png"
@@ -267,7 +269,9 @@ function renderUser(tableChoice) {
           row.classList.add("hide");
           deleteIndex.push(index);
         });
-
+      row.querySelector("input").addEventListener("click", function () {
+        userIndex = this.getAttribute("data-id");
+      });
       tableChoice.appendChild(row);
     });
   });
@@ -293,6 +297,7 @@ function renderUser(tableChoice) {
         value.member.splice(indexNeedToDeleted, 1);
       });
     });
+    userLocals[currentUser][indexForRender].member[userIndex - 1].role = document.querySelector(".changeRole").value.trim();
     localStorage.setItem(`projects`, JSON.stringify(userLocals));
     renderUser(tableForUserList);
     renderUserList();
@@ -466,7 +471,10 @@ function addTask() {
   const dueMonthDate = dueDateSplit[1];
 
   const dueDayDate = dueDateSplit[2];
-
+  getAssigneeValue();
+  getPriorityValue();
+  getStatusValue();
+  getProgressValue();
   if (!taskName.value.trim()) {
     taskName.style.borderColor = "red";
     errorName.style.color = "red";
@@ -563,12 +571,12 @@ function addTask() {
       taskLocal[currentUser][indexForRender][status].push(taskAddByUser);
       localStorage.setItem("userTask", JSON.stringify(taskLocal));
       render();
-      checkValidTaskName();
+      usedTaskName.push(taskName.value.trim());
     }
   }
 }
 
-const changeRole = document.querySelectorAll(".changeRole");
+const changeRole = document.querySelector(".changeRole");
 const inprogress = document.querySelector("#in-progress");
 const done = document.querySelector("#done");
 const pending = document.querySelector("#pending");
@@ -629,6 +637,45 @@ function render() {
           fixTaskWindow.style.display = "block";
           background.style.display = "block";
           indexToChange = index;
+          let changeDate =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].date.split(" - ");
+          changeDate = "2025" + "-" + changeDate[0] + "-" + changeDate[1];
+
+          let changeDueDate =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].dueDate.split(" - ");
+          changeDueDate =
+            "2025" + "-" + changeDueDate[0] + "-" + changeDueDate[1];
+
+          fixTaskName.value =
+            taskLocal[currentUser][indexForRender][fixList][indexToChange].name;
+
+          document.querySelector("#priority2").value =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].priority;
+
+          document.querySelector("#progress2").value =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].progress;
+
+          document.querySelector("#status2").value =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].status;
+
+          document.querySelector("#assignee2").value =
+            taskLocal[currentUser][indexForRender][fixList][
+              indexToChange
+            ].assignee;
+
+          date2.value = changeDate;
+
+          dueDate2.value = changeDueDate;
         });
         row
           .querySelector(".delete")
@@ -667,6 +714,7 @@ function render() {
   });
   accept.addEventListener("click", function () {
     let check = 0;
+
     const dateSplit = date2.value.split("-");
 
     const monthDate = dateSplit[1];
@@ -686,8 +734,8 @@ function render() {
           errorName.style.color = "red";
           errorName.textContent = "Tên dự án tối thiểu 6 kí tự!";
         } else {
-          if (usedTaskName.some((value) => value == fixTaskName.value.trim())) {
-            fixTaskNametaskName.style.borderColor = "red";
+          if (usedTaskName.some((value) => value == fixTaskName.value.trim()) && fixTaskName.value.trim() != taskLocal[currentUser][indexForRender][fixList][indexToChange].name) {
+            fixTaskName.style.borderColor = "red";
             errorName.style.color = "red";
             errorName.textContent = "Tên dự án này đã tồn tại!";
           } else {
@@ -828,7 +876,7 @@ let previousObject = "";
 const findTask = document.querySelector("#findTask");
 function findByName() {
   const status = ["todo", "done", "pending", "inprogress"];
-  if(!previousObject){
+  if (!previousObject) {
     previousObject = JSON.parse(JSON.stringify(taskLocal[currentUser]));
   }
   if (findTask.value.trim()) {
@@ -842,14 +890,14 @@ function findByName() {
 
     render();
   } else {
-    if(previousObject){
-      taskLocal[currentUser] = JSON.parse(JSON.stringify(previousObject))
+    if (previousObject) {
+      taskLocal[currentUser] = JSON.parse(JSON.stringify(previousObject));
     }
     render();
   }
 }
 
-function getSelectedValue(){
+function getSelectedValue() {
   return document.querySelector(".optionSort").value;
 }
 
@@ -886,7 +934,7 @@ function sortByOption() {
     });
     render();
   }
-  if(getSelectedValue() == "Độ ưu tiên"){
+  if (getSelectedValue() == "Độ ưu tiên") {
     status.forEach((statusValue) => {
       for (
         let i = 0;
@@ -900,12 +948,13 @@ function sortByOption() {
           j++
         ) {
           if (
-            priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
-              j
-            ].priority] >
-            priorityOrder[taskLocal[currentUser][indexForRender][statusValue][
-              j + 1
-            ].priority]
+            priorityOrder[
+              taskLocal[currentUser][indexForRender][statusValue][j].priority
+            ] >
+            priorityOrder[
+              taskLocal[currentUser][indexForRender][statusValue][j + 1]
+                .priority
+            ]
           ) {
             let temp = taskLocal[currentUser][indexForRender][statusValue][j];
             taskLocal[currentUser][indexForRender][statusValue][j] =
@@ -934,15 +983,13 @@ function renderProject() {
   const status = ["todo", "inprogress", "done", "pending"];
   status.forEach((statusValue) => {
     taskLocal[currentUser].forEach((value) => {
-        const allTask = [
-          ...value[statusValue],
-        ];
-        value[statusValue] = [];
-        allTask.forEach(value2 => { 
-            value[value2.status.toLowerCase().replace(" ", "")].push(value2);
-        })
+      const allTask = [...value[statusValue]];
+      value[statusValue] = [];
+      allTask.forEach((value2) => {
+        value[value2.status.toLowerCase().replace(" ", "")].push(value2);
       });
     });
-    localStorage.setItem("userTask", JSON.stringify(taskLocal));
+  });
+  localStorage.setItem("userTask", JSON.stringify(taskLocal));
 }
 renderProject();
